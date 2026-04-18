@@ -44,11 +44,7 @@ export default function HomePage() {
           <Link href="/posts">
             <Button size="lg">포스트 보기</Button>
           </Link>
-          <a
-            href="https://nextjs.org/docs"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a href="https://nextjs.org/docs" target="_blank" rel="noopener noreferrer">
             <Button variant="outline" size="lg">
               문서 보기
             </Button>

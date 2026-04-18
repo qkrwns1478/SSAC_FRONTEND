@@ -4,14 +4,14 @@ Production-ready Next.js 15 스타터 템플릿
 
 ## 기술 스택
 
-| 기술 | 버전 | 용도 |
-|---|---|---|
-| Next.js | 15.x | 프레임워크 (App Router) |
-| React | 19.x | UI 라이브러리 |
-| TypeScript | 5.x (strict) | 타입 안전성 |
-| Tailwind CSS | 4.x | 스타일링 |
-| ESLint | 9.x | 코드 품질 |
-| Prettier | 3.x | 코드 포맷팅 |
+| 기술         | 버전         | 용도                    |
+| ------------ | ------------ | ----------------------- |
+| Next.js      | 15.x         | 프레임워크 (App Router) |
+| React        | 19.x         | UI 라이브러리           |
+| TypeScript   | 5.x (strict) | 타입 안전성             |
+| Tailwind CSS | 4.x          | 스타일링                |
+| ESLint       | 9.x          | 코드 품질               |
+| Prettier     | 3.x          | 코드 포맷팅             |
 
 ## 프로젝트 구조
 

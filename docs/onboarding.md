@@ -8,6 +8,7 @@
 ## 1. 로컬 환경 세팅 (15분)
 
 ### 요구사항
+
 - Node.js 20.x 이상
 - npm 10.x 이상 (또는 pnpm/yarn)
 
@@ -32,6 +33,7 @@ npm run dev
 ```
 
 ### 확인 사항
+
 - [ ] http://localhost:3000 홈 화면이 보인다
 - [ ] http://localhost:3000/posts 에서 포스트 목록이 로드된다
 - [ ] `npm run build`가 오류 없이 완료된다
@@ -62,6 +64,7 @@ SSAC_FRONTEND/
 ```
 
 **핵심 규칙 하나만 기억한다면:**
+
 > `app/` 은 `services/` 를 직접 import하지 않습니다. 반드시 `features/` 를 경유합니다.
 
 자세한 규칙은 [`docs/architecture.md`](architecture.md) 참고.
@@ -99,16 +102,19 @@ main          ← 항상 배포 가능한 상태
 ## 4. 팀 협업 규칙
 
 ### PR 규칙
+
 - PR 템플릿(`.github/pull_request_template.md`)을 반드시 작성
 - 최소 1명의 팀원 리뷰 승인 후 머지
 - CI 체크 통과 필수
 
 ### 문서 업데이트 책임
+
 - 코드를 변경할 때 관련 `docs/` 파일도 함께 수정
 - 새 아키텍처 결정은 `docs/decisions/`에 ADR 추가
 - 에이전트가 실수를 반복하면 `docs/decisions/mistake-log-*.md` 작성
 
 ### 커뮤니케이션
+
 - 기술 결정은 구두/슬랙이 아닌 `docs/decisions/`에 기록
 - 기술 부채 발견 시 `docs/quality.md`에 즉시 등록
 

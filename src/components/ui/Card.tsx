@@ -22,9 +22,7 @@ function CardBody({ className, children }: CardProps) {
 }
 
 function CardFooter({ className, children }: CardProps) {
-  return (
-    <div className={cn('border-t border-gray-100 px-6 py-4', className)}>{children}</div>
-  );
+  return <div className={cn('border-t border-gray-100 px-6 py-4', className)}>{children}</div>;
 }
 
 export { Card, CardHeader, CardBody, CardFooter };

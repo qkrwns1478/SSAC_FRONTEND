@@ -90,18 +90,16 @@ module.exports = {
 
     // ──────────────────────────────────────────────
     // ARCH-006: features 간 직접 import 금지
-    // 도메인 간 의존성은 공유 레이어(components/hooks/lib)를 경유해야 합니다.
+    // dependency-cruiser는 from/to 간 역참조(\1)를 지원하지 않으므로
+    // 현재 도메인이 2개 이상일 때 수동으로 from/to 쌍을 추가하세요.
+    // 예: from posts → to users
+    // {
+    //   name: 'no-cross-feature-posts-to-users',
+    //   severity: 'warn',
+    //   from: { path: '^src/features/posts/' },
+    //   to:   { path: '^src/features/users/' },
+    // },
     // ──────────────────────────────────────────────
-    {
-      name: 'no-cross-feature-import',
-      severity: 'warn',
-      comment:
-        '[ARCH-006] features/<A>/ → features/<B>/ 직접 import 경고. ' +
-        '공유 로직은 components/ 또는 hooks/ 로 추출하세요. ' +
-        '참고: docs/architecture.md',
-      from: { path: '^src/features/([^/]+)/' },
-      to: { path: '^src/features/(?!\\1)' },
-    },
 
     // ──────────────────────────────────────────────
     // 순환 의존성 금지 (모든 레이어)
