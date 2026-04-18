@@ -7,7 +7,16 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc --noEmit",
+    "layers": "depcruise src --config .dependency-cruiser.cjs",
+
+    "validate": "npm run typecheck && npm run lint && npm run format:check && npm run layers && npm run build",
+
+    "scaffold": "node scripts/scaffold.js",
+
+    "prepare": "git config core.hooksPath .githooks || true"
   },
   "dependencies": {
     "next": "15.3.1",
@@ -18,6 +27,7 @@
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dependency-cruiser": "^16",
     "eslint": "^9",
     "eslint-config-next": "15.3.1",
     "eslint-config-prettier": "^10.1.2",

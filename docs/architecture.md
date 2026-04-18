@@ -2,9 +2,10 @@
 
 > 마지막 업데이트: 2026-04-18 | 관련 ADR: [001](decisions/001-initial-architecture.md)
 >
-> **에이전트 사용법**: 파일을 만들거나 import를 작성하기 전에
-> 아래 "파일 배치 결정 트리"와 "import 허용 매트릭스"를 쿼리하세요.
-> 설명을 읽는 것이 목적이 아니라, 규칙을 확인하는 것이 목적입니다.
+> **기계적 진실(machine truth)**: `.dependency-cruiser.cjs`
+> 이 파일은 그 설명입니다. 규칙의 강제는 `.dependency-cruiser.cjs` 가 담당합니다.
+>
+> 위반 여부를 확인하려면 문서를 읽지 말고: `npm run layers` 를 실행하세요.
 
 ---
 
