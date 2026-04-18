@@ -1,15 +1,12 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ApiError } from '@/types';
 
-interface UseFetchState<T> {
+interface UseFetchReturn<T> {
   data: T | null;
   isLoading: boolean;
   error: ApiError | null;
-}
-
-interface UseFetchReturn<T> extends UseFetchState<T> {
   refetch: () => void;
 }
 
@@ -20,35 +17,51 @@ interface UseFetchReturn<T> extends UseFetchState<T> {
  * const { data, isLoading, error, refetch } = useFetch(() => postsService.getAll());
  */
 export function useFetch<T>(fetcher: () => Promise<T>): UseFetchReturn<T> {
-  const [state, setState] = useState<UseFetchState<T>>({
-    data: null,
-    isLoading: true,
-    error: null,
+  const [data, setData] = useState<T | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<ApiError | null>(null);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  // Sync ref after render, never during render
+  const fetcherRef = useRef<() => Promise<T>>(fetcher);
+  useEffect(() => {
+    fetcherRef.current = fetcher;
   });
 
-  // Keep a stable reference to the fetcher so the effect doesn't re-run on every render
-  const fetcherRef = useRef(fetcher);
-  fetcherRef.current = fetcher;
+  useEffect(() => {
+    let cancelled = false;
 
-  const execute = useCallback(() => {
-    setState((prev) => ({ ...prev, isLoading: true, error: null }));
-
+    // All setState calls are async (inside the Promise chain) to satisfy
+    // the react-hooks/set-state-in-effect rule.
     fetcherRef
       .current()
-      .then((data) => setState({ data, isLoading: false, error: null }))
+      .then((result) => {
+        if (cancelled) return;
+        setData(result);
+        setIsLoading(false);
+        setError(null);
+      })
       .catch((err: unknown) => {
+        if (cancelled) return;
         const apiError: ApiError =
           err !== null && typeof err === 'object' && 'status' in err
             ? (err as ApiError)
             : { message: 'An unexpected error occurred', status: 500 };
-
-        setState({ data: null, isLoading: false, error: apiError });
+        setError(apiError);
+        setIsLoading(false);
       });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [refreshKey]);
+
+  // setState calls here are in an event-handler callback, not in an effect body.
+  const refetch = useCallback(() => {
+    setIsLoading(true);
+    setError(null);
+    setRefreshKey((k) => k + 1);
   }, []);
 
-  useEffect(() => {
-    execute();
-  }, [execute]);
-
-  return { ...state, refetch: execute };
+  return { data, isLoading, error, refetch };
 }

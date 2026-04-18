@@ -8,6 +8,7 @@
 ## 트리거 조건
 
 다음 중 하나 해당 시 ADR을 생성해야 합니다:
+
 - 새 npm 패키지 설치
 - 레이어 구조 변경 (`docs/architecture.md` 수정 필요 시)
 - 공통 패턴/컨벤션 변경 (`docs/conventions.md` 수정 필요 시)
@@ -31,11 +32,11 @@ ls docs/decisions/[0-9]*.md | tail -1
 ```markdown
 # ADR-NNN: [결정 제목]
 
-| 항목 | 내용 |
-|---|---|
-| 날짜 | YYYY-MM-DD |
-| 상태 | Proposed / Accepted / Deprecated |
-| 담당 에이전트 | Claude Code / Codex / 기타 |
+| 항목          | 내용                             |
+| ------------- | -------------------------------- |
+| 날짜          | YYYY-MM-DD                       |
+| 상태          | Proposed / Accepted / Deprecated |
+| 담당 에이전트 | Claude Code / Codex / 기타       |
 
 ## 컨텍스트
 
@@ -47,15 +48,15 @@ ls docs/decisions/[0-9]*.md | tail -1
 
 ## 고려한 대안
 
-| 대안 | 거부 이유 |
-|---|---|
-| 대안 A | |
-| 대안 B | |
+| 대안   | 거부 이유 |
+| ------ | --------- |
+| 대안 A |           |
+| 대안 B |           |
 
 ## 트레이드오프
 
-**얻는 것**: 
-**잃는 것**: 
+**얻는 것**:
+**잃는 것**:
 
 ## 결과
 
@@ -69,6 +70,7 @@ ls docs/decisions/[0-9]*.md | tail -1
 ### STEP 3 — 관련 docs/ 파일 업데이트
 
 ADR 내용에 따라:
+
 - 레이어 변경 → `docs/architecture.md` 업데이트
 - 컨벤션 변경 → `docs/conventions.md` 업데이트
 - 기술 부채 해소 → `docs/quality.md` 해당 TD 항목 상태 변경

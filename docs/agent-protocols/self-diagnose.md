@@ -8,6 +8,7 @@
 ## 트리거 조건
 
 다음 중 하나 해당 시 이 프로토콜을 실행합니다:
+
 - `npm run lint` 또는 `npm run build`가 2회 이상 동일 오류로 실패
 - CI가 같은 규칙 위반으로 2번 이상 PR을 차단
 
@@ -19,14 +20,14 @@
 
 오류 메시지를 읽고 아래 표에서 유형을 찾습니다:
 
-| 오류 패턴 | 유형 | 이동할 단계 |
-|---|---|---|
-| `@typescript-eslint/no-explicit-any` | 타입 위반 | STEP 2-A |
-| `[레이어 위반]` 포함 | 아키텍처 위반 | STEP 2-B |
-| `no-unused-vars` | 코드 노이즈 | STEP 2-C |
-| `Cannot find module` | import 경로 오류 | STEP 2-D |
-| `Type error:` | TypeScript 컴파일 오류 | STEP 2-E |
-| 위 패턴 없음 | 미분류 오류 | STEP 3 |
+| 오류 패턴                            | 유형                   | 이동할 단계 |
+| ------------------------------------ | ---------------------- | ----------- |
+| `@typescript-eslint/no-explicit-any` | 타입 위반              | STEP 2-A    |
+| `[레이어 위반]` 포함                 | 아키텍처 위반          | STEP 2-B    |
+| `no-unused-vars`                     | 코드 노이즈            | STEP 2-C    |
+| `Cannot find module`                 | import 경로 오류       | STEP 2-D    |
+| `Type error:`                        | TypeScript 컴파일 오류 | STEP 2-E    |
+| 위 패턴 없음                         | 미분류 오류            | STEP 3      |
 
 ---
 
@@ -120,24 +121,28 @@ ls docs/decisions/mistake-log-*.md 2>/dev/null | wc -l
 ```markdown
 # ML-NNN: [오류 제목]
 
-| 항목 | 내용 |
-|---|---|
-| 날짜 | YYYY-MM-DD |
-| 반복 횟수 | N회 |
+| 항목      | 내용       |
+| --------- | ---------- |
+| 날짜      | YYYY-MM-DD |
+| 반복 횟수 | N회        |
 
 ## 오류 내용
+
 [오류 메시지 전문]
 
 ## 근본 원인
+
 [왜 이 오류가 발생했는가]
 
 ## 하네스에 추가된 해결책
+
 - [ ] eslint.config.mjs 규칙 추가
 - [ ] AGENTS.md 금지 목록 업데이트
 - [ ] docs/architecture.md 경고 추가
 - [ ] docs/agent-protocols/ 새 프로토콜 작성
 
 ## 검증
+
 [수정 후 실행한 명령어와 결과]
 ```
 

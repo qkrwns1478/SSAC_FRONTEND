@@ -9,26 +9,26 @@
 
 ### 파일 & 디렉토리
 
-| 대상 | 규칙 | 예시 |
-|---|---|---|
-| React 컴포넌트 파일 | PascalCase | `PostCard.tsx` |
-| 훅 파일 | camelCase, `use` 접두사 | `useFetch.ts` |
-| 서비스 파일 | camelCase, 도메인명 | `posts.ts` |
-| 유틸 파일 | camelCase | `utils.ts` |
-| 타입 파일 | camelCase | `index.ts` |
-| 디렉토리 | camelCase (소문자) | `posts/`, `components/` |
+| 대상                | 규칙                    | 예시                    |
+| ------------------- | ----------------------- | ----------------------- |
+| React 컴포넌트 파일 | PascalCase              | `PostCard.tsx`          |
+| 훅 파일             | camelCase, `use` 접두사 | `useFetch.ts`           |
+| 서비스 파일         | camelCase, 도메인명     | `posts.ts`              |
+| 유틸 파일           | camelCase               | `utils.ts`              |
+| 타입 파일           | camelCase               | `index.ts`              |
+| 디렉토리            | camelCase (소문자)      | `posts/`, `components/` |
 
 ### 변수 & 함수
 
-| 대상 | 규칙 | 예시 |
-|---|---|---|
-| 변수, 함수 | camelCase | `getUserById`, `isLoading` |
-| React 컴포넌트 | PascalCase | `PostCard`, `Button` |
-| 타입 / 인터페이스 | PascalCase | `Post`, `ApiError` |
-| 상수 (불변 원시값) | SCREAMING_SNAKE_CASE | `MAX_RETRY_COUNT` |
-| boolean 변수 | `is`, `has`, `can` 접두사 | `isLoading`, `hasError` |
-| 이벤트 핸들러 | `handle` 접두사 | `handleSubmit`, `handleClick` |
-| 이벤트 Props | `on` 접두사 | `onClick`, `onSubmit` |
+| 대상               | 규칙                      | 예시                          |
+| ------------------ | ------------------------- | ----------------------------- |
+| 변수, 함수         | camelCase                 | `getUserById`, `isLoading`    |
+| React 컴포넌트     | PascalCase                | `PostCard`, `Button`          |
+| 타입 / 인터페이스  | PascalCase                | `Post`, `ApiError`            |
+| 상수 (불변 원시값) | SCREAMING_SNAKE_CASE      | `MAX_RETRY_COUNT`             |
+| boolean 변수       | `is`, `has`, `can` 접두사 | `isLoading`, `hasError`       |
+| 이벤트 핸들러      | `handle` 접두사           | `handleSubmit`, `handleClick` |
+| 이벤트 Props       | `on` 접두사               | `onClick`, `onSubmit`         |
 
 ---
 
@@ -111,6 +111,7 @@ const url = env.apiBaseUrl;
 ```
 
 새 환경 변수 추가 시:
+
 1. `.env.local`에 변수 추가
 2. `src/lib/env.ts`에 타입 안전하게 등록
 3. `.env.local` 변수명은 PR 설명에 명시 (팀원이 로컬에서 설정할 수 있도록)
