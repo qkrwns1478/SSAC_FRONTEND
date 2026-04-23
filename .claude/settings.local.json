@@ -30,7 +30,12 @@
       "Bash(src/app/page.tsx)",
       "Bash(python3:*)",
       "Bash(npx prettier:*)",
-      "Bash(npx husky:*)"
+      "Bash(npx husky:*)",
+      "Bash(src/features/home/SearchBar.tsx)",
+      "Bash(src/app/search/page.tsx)",
+      "Bash(src/app/api/search/)",
+      "Bash(suggest/)",
+      "Bash(log/)"
     ]
   }
 }
