@@ -44,7 +44,11 @@
       "Bash(C:/Program Files/nodejs/npx)",
       "Bash(./node_modules/.bin/eslint src/features/home/SearchBar.tsx)",
       "Bash(SearchBar.tsx)",
-      "WebFetch(domain:api.github.com)"
+      "WebFetch(domain:api.github.com)",
+      "Bash(src/app/content/page.tsx)",
+      "Bash(src/features/content/)",
+      "Bash(src/app/content/[id]/page.tsx)",
+      "Bash(src/app/api/content/)"
     ]
   }
 }
