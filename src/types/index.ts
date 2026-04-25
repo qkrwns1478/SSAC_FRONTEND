@@ -187,6 +187,42 @@ export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'dan
 export type ButtonSize = 'sm' | 'md' | 'lg';
 
 // ============================================================
+// Content Domain Types
+// ============================================================
+
+export interface PopularContent {
+  id: number;
+  title: string;
+  viewCount: number;
+  likeCount: number;
+}
+
+export interface PopularContentResponse {
+  items: PopularContent[];
+  aggregationLabel: string;
+}
+
+export interface NewContent {
+  id: number;
+  title: string;
+  registeredAt: string;
+}
+
+export interface RecommendedContent {
+  id: number;
+  title: string;
+  summary: string;
+}
+
+export interface ContentDetail {
+  id: number;
+  title: string;
+  body: string;
+  category: string;
+  publishedAt: string;
+}
+
+// ============================================================
 // Search Domain Types
 // ============================================================
 
