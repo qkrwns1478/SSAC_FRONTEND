@@ -38,6 +38,7 @@ async function request<T>(
 
   const fetchOptions: RequestInit = {
     ...rest,
+    credentials: 'include', // accessToken 쿠키 전송
     headers: {
       ...(!isFormData && { 'Content-Type': 'application/json' }),
       ...headers,
