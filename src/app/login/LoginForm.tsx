@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
+import { env } from '@/lib/env';
 
 /** BE가 OAuth 실패 시 전달하는 error 쿼리 파라미터 값 → 표시 메시지 매핑 */
 const ERROR_MESSAGES: Record<string, string> = {
@@ -30,8 +31,11 @@ export function LoginForm() {
   const handleKakaoLogin = () => {
     if (isLoading) return;
     setIsKakaoLoading(true);
-    const params = new URLSearchParams({ redirectTo });
-    window.location.href = `/api/auth/kakao?${params.toString()}`;
+    // BE Spring Security OAuth2 엔드포인트로 직접 브라우저 네비게이션 (fetch 아님)
+    // redirectTo는 상대 경로만 허용 (BE isSafePath 검증)
+    const kakaoUrl = new URL('/oauth2/authorization/kakao', env.backendUrl);
+    kakaoUrl.searchParams.set('redirectTo', redirectTo); // 항상 전달 — 미전달 시 BE default-redirect-uri로 이동
+    window.location.href = kakaoUrl.toString();
     // 페이지 이동 전까지 버튼 비활성화 유지 (중복 클릭 방지)
   };
 
