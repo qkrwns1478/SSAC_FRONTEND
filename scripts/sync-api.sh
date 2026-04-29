@@ -136,15 +136,26 @@ rm -f "$TEMP_FILE"
 echo "⚙️  타입 생성 중..."
 
 # openapi-typescript CLI 위치 탐색 (로컬 우선)
-OAT_BIN=""
-if [[ -x "node_modules/.bin/openapi-typescript" ]]; then
-  OAT_BIN="node_modules/.bin/openapi-typescript"
-elif command -v openapi-typescript &>/dev/null; then
-  OAT_BIN="openapi-typescript"
+# Windows + Git Bash 환경에서 node_modules/.bin/ 래퍼는 #!/bin/sh 로 실행되어
+# /bin/sh의 PATH에 node가 없는 경우 "exec: node: not found" 오류가 발생한다.
+# 이를 피하기 위해 JS 파일을 node로 직접 호출한다.
+#
+# npm run 으로 실행할 때 bash가 npm의 PATH를 온전히 상속받지 못하는 경우
+# $npm_node_execpath(npm이 자신이 사용하는 node 경로를 전달하는 환경변수)로 폴백한다.
+NODE_BIN="${npm_node_execpath:-$(command -v node 2>/dev/null)}"
+if [[ -z "$NODE_BIN" ]]; then
+  echo "❌ node 실행 파일을 찾을 수 없습니다."
+  echo "   npm run sync:api 로 실행하거나, node가 PATH에 있는지 확인하세요."
+  exit 1
+fi
+
+OAT_JS=""
+if [[ -f "node_modules/openapi-typescript/bin/cli.js" ]]; then
+  OAT_JS="node_modules/openapi-typescript/bin/cli.js"
 else
   echo "⚠️  openapi-typescript가 없습니다. 설치합니다..."
   npm install --save-dev openapi-typescript
-  OAT_BIN="node_modules/.bin/openapi-typescript"
+  OAT_JS="node_modules/openapi-typescript/bin/cli.js"
 fi
 
 # 헤더 주석 추가 후 생성
@@ -163,7 +174,7 @@ TEMP_TYPES="$(mktemp).ts"
 # set -e 환경에서 stdout 캡처($())는 openapi-typescript가 비정상 종료할 때
 # 스크립트 전체를 즉시 종료시켜 api-types.ts를 빈 채로 남기는 문제가 있었다.
 # if ! 구문으로 set -e 영향을 차단하고 실패를 명시적으로 처리한다.
-if ! "$OAT_BIN" "$CACHE_FILE" --output "$TEMP_TYPES" 2>&1; then
+if ! "$NODE_BIN" "$OAT_JS" "$CACHE_FILE" --output "$TEMP_TYPES" 2>&1; then
   rm -f "$TEMP_TYPES"
   echo "❌ openapi-typescript 실행 실패 — swagger.json이 유효한지 확인하세요."
   echo "   이전 api-types.ts는 변경되지 않았습니다."
