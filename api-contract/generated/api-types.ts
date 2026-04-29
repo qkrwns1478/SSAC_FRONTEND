@@ -2,7 +2,7 @@
 // ⚠️  이 파일은 자동 생성됩니다 — 절대 수동으로 편집하지 마세요.
 // 생성 명령: npm run sync:api
 // 소스: http://172.17.96.1:8080/api-docs/swagger.json
-// 생성 시각: 2026-04-27 00:16:39
+// 생성 시각: 2026-04-29 20:59:51
 // ============================================================
 
 /**
@@ -42,11 +42,9 @@ export interface paths {
         put?: never;
         /**
          * 전체 디바이스 로그아웃
-         * @description [호출 화면] 마이페이지 > 전체 기기에서 로그아웃
-         *     [권한 조건] 로그인 필수 (JWT Bearer 토큰)
-         *     [특이 동작] 해당 계정으로 발급된 모든 Refresh Token을 일괄 무효화한다.
-         *     모든 기기에서 발급된 Access Token도 다음 요청부터 차단된다.
-         *     accessToken, refreshToken, guestId 쿠키를 즉시 삭제한다.
+         * @description [호출 화면] 마이페이지 > 설정 > 보안 관리 > 모든 기기에서 로그아웃 클릭 시.
+         *     [권한 조건] 로그인 회원 전용 (USER, ADMIN).
+         *     [특이 동작] 해당 계정으로 발급된 모든 Refresh Token을 무효화하고 관련 쿠키를 모두 삭제한다.
          */
         post: operations["logoutAll"];
         delete?: never;
@@ -64,17 +62,17 @@ export interface paths {
         };
         /**
          * 퀴즈 응시 기록 목록 조회
-         * @description [호출 화면] 프로필 > 퀴즈 기록
-         *     [권한 조건] 로그인 필수 (JWT Bearer 토큰)
-         *     [특이 동작] 페이지네이션 및 정렬(LATEST/SCORE)을 지원한다.
+         * @description [호출 화면] 프로필 > 내 퀴즈 기록 페이지 진입 시 호출.
+         *     [권한 조건] 로그인 회원 전용 (USER, ADMIN). 비회원(GUEST) 접근 불가.
+         *     [특이 동작] 페이지네이션 및 정렬(LATEST/SCORE)을 지원한다. 본인의 기록만 조회 가능하다.
          */
         get: operations["getHistory"];
         put?: never;
         /**
          * 퀴즈 제출
-         * @description [호출 화면] 퀴즈 풀기 완료 후
-         *     [권한 조건] 로그인 필수 (JWT Bearer 토큰)
-         *     [특이 동작] 서버에서 정답 검증 및 점수 계산. 결과를 즉시 반환한다.
+         * @description [호출 화면] 퀴즈 풀기 완료 후 결과 확인 단계에서 호출.
+         *     [권한 조건] 로그인 필수 (JWT Bearer 토큰), 비회원(GUEST) 가능.
+         *     [특이 동작] 서버에서 정답 검증 및 점수 계산 후 기록을 저장한다. GUEST로 제출 시 이후 로그인 시 자동 이전된다.
          */
         post: operations["submitQuiz"];
         delete?: never;
@@ -134,9 +132,32 @@ export interface paths {
         put?: never;
         /**
          * 비회원 토큰 발급
-         * @description 로그인 없이 서비스를 이용할 수 있는 임시 Guest 토큰을 발급한다. 이후 로그인 시 퀴즈 기록이 회원 계정으로 자동 이전된다.
+         * @description 로그인 없이 서비스를 이용할 수 있는 임시 Guest 토큰을 발급한다. 기존 guestId 쿠키가 있다면 재사용하고, 없다면 새로 생성한다.
          */
         post: operations["issueGuestToken"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/events/menu-click": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 메뉴 클릭 이벤트 수집
+         * @description [호출 화면] 전체 페이지 (메뉴 클릭 시)
+         *     [권한 조건] 인증 불필요 (비회원 포함).
+         *     [특이 동작] userId와 guestId 중 하나는 반드시 포함되어야 한다.
+         *     이벤트 저장은 비동기로 처리되며, 수신 성공 즉시 204를 반환한다.
+         */
+        post: operations["recordMenuClick"];
         delete?: never;
         options?: never;
         head?: never;
@@ -158,10 +179,9 @@ export interface paths {
         head?: never;
         /**
          * 닉네임 수정
-         * @description [호출 화면] 마이페이지 > 닉네임 수정
-         *     [권한 조건] 로그인 필수 (JWT Bearer 토큰)
-         *     [특이 동작] 닉네임 중복 시 409, 유효성 검사 실패 시 400 반환.
-         *     닉네임 정책: 2~20자, 한글/영문/숫자/언더스코어/하이픈만 허용
+         * @description [호출 화면] 마이페이지 > 프로필 수정 섹션에서 닉네임 수정 시 호출.
+         *     [권한 조건] 로그인 회원 전용 (USER, ADMIN).
+         *     [특이 동작] 닉네임 중복 시 409 반환. 닉네임 정책: 2~20자, 특수문자 제한.
          */
         patch: operations["updateNickname"];
         trace?: never;
@@ -181,7 +201,8 @@ export interface paths {
         head?: never;
         /**
          * 사용자 권한 변경
-         * @description [권한 조건] ADMIN만 접근 가능
+         * @description [호출 화면] 관리자 대시보드 > 사용자 상세 정보 > 권한 수정 팝업
+         *     [권한 조건] ADMIN 역할 전용.
          *     [특이 동작] 변경된 권한은 해당 사용자의 다음 API 요청부터 즉시 반영된다. GUEST 역할 부여 불가.
          */
         patch: operations["updateUserRole"];
@@ -227,6 +248,46 @@ export interface paths {
         patch: operations["markAllAsRead"];
         trace?: never;
     };
+    "/oauth2/authorization/kakao": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 카카오 로그인 시작
+         * @description 카카오 OAuth 인증 페이지로 리다이렉트한다. redirectTo 파라미터를 전달하면 인증 후 해당 경로로 돌아간다(상대 경로만 허용). 실제 요청은 Spring Security OAuth2 필터가 처리한다.
+         */
+        get: operations["login"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/login/oauth2/code/kakao": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 카카오 로그인 콜백
+         * @description 카카오 인증 코드를 받아 Access Token과 Refresh Token을 발급한다. 두 토큰 모두 HttpOnly 쿠키로 전달된다. 신규 사용자는 자동 가입된다. guestId 쿠키가 있으면 비회원 퀴즈 기록을 회원 계정으로 자동 이전한다. 실제 요청은 Spring Security OAuth2 필터가 처리한다.
+         */
+        get: operations["callback"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/users/me": {
         parameters: {
             query?: never;
@@ -236,9 +297,9 @@ export interface paths {
         };
         /**
          * 내 프로필 조회
-         * @description [호출 화면] 마이페이지 진입 시
-         *     [권한 조건] 로그인 필수 (JWT Bearer 토큰)
-         *     [특이 동작] 토큰의 이메일로 사용자를 식별하며 타인 프로필 조회 불가
+         * @description [호출 화면] 마이페이지 진입 시 호출.
+         *     [권한 조건] 로그인 회원 전용 (USER, ADMIN). 비회원(GUEST) 접근 불가.
+         *     [특이 동작] 토큰의 이메일로 사용자를 식별하며 타인 프로필 조회 불가.
          */
         get: operations["getProfile"];
         put?: never;
@@ -285,9 +346,9 @@ export interface paths {
         };
         /**
          * 퀴즈 응시 상세 결과 조회
-         * @description [호출 화면] 퀴즈 기록 > 상세 보기
-         *     [권한 조건] 로그인 필수 (JWT Bearer 토큰)
-         *     [특이 동작] 문항별 선택 답안, 정답, 정답 여부를 모두 반환한다. 본인 기록만 조회 가능.
+         * @description [호출 화면] 퀴즈 기록 목록에서 특정 항목 클릭 시 상세 보기.
+         *     [권한 조건] 로그인 회원 전용 (USER, ADMIN). 비회원(GUEST) 접근 불가.
+         *     [특이 동작] 문항별 선택 답안, 정답 여부, 획득 점수를 상세히 반환한다.
          */
         get: operations["getDetail"];
         put?: never;
@@ -307,11 +368,33 @@ export interface paths {
         };
         /**
          * 사용자 퀴즈 통계 조회
-         * @description [호출 화면] 프로필 > 학습 통계
-         *     [권한 조건] 로그인 필수 (JWT Bearer 토큰)
-         *     [특이 동작] 누적 통계와 기간별(일간/주간/월간) 통계를 함께 반환한다.
+         * @description [호출 화면] 프로필 > 학습 통계 탭 진입 시 호출.
+         *     [권한 조건] 로그인 회원 전용 (USER, ADMIN). 비회원(GUEST) 접근 불가.
+         *     [특이 동작] 누적 통계와 지정된 기간(DAILY/WEEKLY/MONTHLY)의 추이 데이터를 반환한다.
          */
         get: operations["getStats"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/quiz-attempts/guest": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 비회원 퀴즈 응시 기록 조회
+         * @description [호출 화면] 비회원 퀴즈 풀기 후 내 기록 확인
+         *     [권한 조건] Guest 토큰 필요 (POST /api/v1/auth/guest 로 발급)
+         *     [특이 동작] JWT의 guestId를 기준으로 본인의 기록만 반환한다.
+         */
+        get: operations["getGuestHistory"];
         put?: never;
         post?: never;
         delete?: never;
@@ -331,7 +414,7 @@ export interface paths {
          * 네이버 로그인 시작
          * @description 네이버 OAuth 인증 페이지로 리다이렉트한다. state 파라미터로 CSRF를 방어한다.
          */
-        get: operations["login"];
+        get: operations["login_1"];
         put?: never;
         post?: never;
         delete?: never;
@@ -349,9 +432,9 @@ export interface paths {
         };
         /**
          * 네이버 로그인 콜백
-         * @description 네이버 인증 코드를 받아 Access Token을 발급한다. Refresh Token은 HttpOnly 쿠키로 전달된다. 신규 사용자는 자동 가입된다. guestId 쿠키가 있으면 비회원 퀴즈 기록을 회원 계정으로 자동 이전한다.
+         * @description 네이버 인증 코드를 받아 Access Token과 Refresh Token을 HttpOnly 쿠키로 저장한 뒤 프론트엔드(oauth2.default-redirect-uri)로 리다이렉트한다. 신규 사용자는 자동 가입된다. guestId 쿠키가 있으면 비회원 퀴즈 기록을 회원 계정으로 자동 이전한다.
          */
-        get: operations["callback"];
+        get: operations["callback_1"];
         put?: never;
         post?: never;
         delete?: never;
@@ -369,10 +452,34 @@ export interface paths {
         };
         /**
          * 전체 사용자 목록 조회
-         * @description [권한 조건] ADMIN만 접근 가능
-         *     [특이 동작] 페이지네이션 지원. 가입일시 내림차순 정렬.
+         * @description [호출 화면] 관리자 대시보드 > 사용자 관리 탭
+         *     [권한 조건] ADMIN 역할 전용.
+         *     [특이 동작] 페이지네이션 지원. 가입일시 내림차순 정렬. 비회원(GUEST)은 목록에 포함되지 않음.
          */
         get: operations["listUsers"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/menu-stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 메뉴 클릭 통계 조회
+         * @description [호출 화면] 관리자 대시보드 > 메뉴 분석 탭
+         *     [권한 조건] ADMIN 역할 전용.
+         *     [특이 동작] 최근 7일 기준 메뉴별 클릭 수 및 CTR을 반환한다.
+         *     CTR = 메뉴 클릭 수 / 전체 고유 사용자 수 * 100 (소수점 둘째 자리까지).
+         */
+        get: operations["getMenuStats"];
         put?: never;
         post?: never;
         delete?: never;
@@ -455,6 +562,29 @@ export interface paths {
          *     size: 페이지 크기 (기본값 20, 최대 100)
          */
         get: operations["getNews"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/ab-test/menu": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 메뉴 A/B 테스트 그룹 조회
+         * @description [호출 화면] 앱 초기화 또는 메뉴 렌더링 시점
+         *     [권한 조건] 인증 불필요 (비회원 포함).
+         *     [특이 동작] userId와 guestId 중 하나를 쿼리 파라미터로 전달해야 한다.
+         *     테스트 종료 후에는 채택된 메뉴 구조의 그룹을 모든 사용자에게 반환한다.
+         */
+        get: operations["getMenuGroup"];
         put?: never;
         post?: never;
         delete?: never;
@@ -599,6 +729,16 @@ export interface components {
              * @example Bearer
              */
             tokenType?: string;
+        };
+        MenuClickRequest: {
+            eventType: string;
+            menuId: string;
+            menuName: string;
+            userId?: string;
+            guestId?: string;
+            /** Format: date-time */
+            clickedAt: string;
+            pageContext: string;
         };
         UpdateNicknameRequest: {
             /**
@@ -762,9 +902,9 @@ export interface components {
             sort?: components["schemas"]["SortObject"];
             /** Format: int32 */
             pageNumber?: number;
+            paged?: boolean;
             /** Format: int32 */
             pageSize?: number;
-            paged?: boolean;
             unpaged?: boolean;
         };
         SortObject: {
@@ -975,6 +1115,20 @@ export interface components {
             pageable?: components["schemas"]["PageableObject"];
             empty?: boolean;
         };
+        ApiResponseListMenuClickStatResponse: {
+            success?: boolean;
+            data?: components["schemas"]["MenuClickStatResponse"][];
+            message?: string;
+            loginRequired?: boolean;
+        };
+        MenuClickStatResponse: {
+            menuId?: string;
+            menuName?: string;
+            /** Format: int64 */
+            clickCount?: number;
+            /** Format: double */
+            ctr?: number;
+        };
         ApiResponseUserSegmentResponse: {
             success?: boolean;
             data?: components["schemas"]["UserSegmentResponse"];
@@ -1032,6 +1186,15 @@ export interface components {
             totalCount?: number;
             hasNext?: boolean;
             contents?: components["schemas"]["NewsItemResponse"][];
+        };
+        AbTestGroupResponse: {
+            group?: string;
+        };
+        ApiResponseAbTestGroupResponse: {
+            success?: boolean;
+            data?: components["schemas"]["AbTestGroupResponse"];
+            message?: string;
+            loginRequired?: boolean;
         };
     };
     responses: never;
@@ -1113,6 +1276,15 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponseError"];
                 };
             };
+            /** @description loginRequired: true (회원 로그인 필요) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
             /** @description 서버 내부 오류. 동일한 요청이 반복되면 백엔드 팀에 문의하세요. */
             500: {
                 headers: {
@@ -1164,6 +1336,15 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponseError"];
                 };
             };
+            /** @description loginRequired: true (회원 로그인 필요) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponsePageQuizAttemptSummaryResponse"];
+                };
+            };
             /** @description 서버 내부 오류. 동일한 요청이 반복되면 백엔드 팀에 문의하세요. */
             500: {
                 headers: {
@@ -1213,6 +1394,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ApiResponseError"];
+                };
+            };
+            /** @description 접근 권한 없음 (GUEST/USER/ADMIN 외) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseQuizAttemptSummaryResponse"];
                 };
             };
             /** @description 퀴즈를 찾을 수 없음 */
@@ -1320,7 +1510,9 @@ export interface operations {
             query?: never;
             header?: never;
             path?: never;
-            cookie?: never;
+            cookie?: {
+                guestId?: string;
+            };
         };
         requestBody?: never;
         responses: {
@@ -1332,6 +1524,53 @@ export interface operations {
                 content: {
                     "*/*": components["schemas"]["ApiResponseLoginResponse"];
                 };
+            };
+            /** @description 인증 토큰이 없거나 만료되었습니다. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseError"];
+                };
+            };
+            /** @description 서버 내부 오류. 동일한 요청이 반복되면 백엔드 팀에 문의하세요. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseError"];
+                };
+            };
+        };
+    };
+    recordMenuClick: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MenuClickRequest"];
+            };
+        };
+        responses: {
+            /** @description 이벤트 수신 성공 */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description 유효하지 않은 이벤트 데이터 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description 인증 토큰이 없거나 만료되었습니다. */
             401: {
@@ -1391,6 +1630,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ApiResponseError"];
+                };
+            };
+            /** @description loginRequired: true (회원 로그인 필요) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseProfileResponse"];
                 };
             };
             /** @description 사용자를 찾을 수 없음 */
@@ -1468,7 +1716,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponseError"];
                 };
             };
-            /** @description ADMIN 권한 없음 */
+            /** @description 접근 권한 없음 (ADMIN 전용) */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -1575,6 +1823,86 @@ export interface operations {
             };
         };
     };
+    login: {
+        parameters: {
+            query?: {
+                /** @description 인증 후 돌아갈 경로 (예: /my-page). 생략 시 /로 이동. */
+                redirectTo?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description 인증 토큰이 없거나 만료되었습니다. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseError"];
+                };
+            };
+            /** @description 서버 내부 오류. 동일한 요청이 반복되면 백엔드 팀에 문의하세요. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseError"];
+                };
+            };
+        };
+    };
+    callback: {
+        parameters: {
+            query: {
+                /** @description 카카오가 전달한 인증 코드 */
+                code: string;
+                /** @description CSRF 방어용 state 파라미터 */
+                state: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description 인증 토큰이 없거나 만료되었습니다. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseError"];
+                };
+            };
+            /** @description 서버 내부 오류. 동일한 요청이 반복되면 백엔드 팀에 문의하세요. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseError"];
+                };
+            };
+        };
+    };
     getProfile: {
         parameters: {
             query?: never;
@@ -1600,6 +1928,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ApiResponseError"];
+                };
+            };
+            /** @description loginRequired: true (회원 로그인 필요) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseProfileResponse"];
                 };
             };
             /** @description 사용자를 찾을 수 없음 */
@@ -1711,6 +2048,15 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponseError"];
                 };
             };
+            /** @description loginRequired: true (회원 로그인 필요) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseQuizAttemptDetailResponse"];
+                };
+            };
             /** @description 응시 기록을 찾을 수 없음 */
             404: {
                 headers: {
@@ -1761,6 +2107,15 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponseError"];
                 };
             };
+            /** @description loginRequired: true (회원 로그인 필요) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseUserStatsResponse"];
+                };
+            };
             /** @description 서버 내부 오류. 동일한 요청이 반복되면 백엔드 팀에 문의하세요. */
             500: {
                 headers: {
@@ -1772,7 +2127,58 @@ export interface operations {
             };
         };
     };
-    login: {
+    getGuestHistory: {
+        parameters: {
+            query?: {
+                /**
+                 * @description 페이지 번호 (0부터 시작)
+                 * @example 0
+                 */
+                page?: number;
+                /**
+                 * @description 페이지 크기
+                 * @example 10
+                 */
+                size?: number;
+                /** @description 정렬 기준 (LATEST: 최신 순, SCORE: 점수 순) */
+                sort?: "LATEST" | "SCORE";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponsePageQuizAttemptSummaryResponse"];
+                };
+            };
+            /** @description 인증 토큰이 없거나 만료되었습니다. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseError"];
+                };
+            };
+            /** @description 서버 내부 오류. 동일한 요청이 반복되면 백엔드 팀에 문의하세요. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseError"];
+                };
+            };
+        };
+    };
+    login_1: {
         parameters: {
             query?: never;
             header?: never;
@@ -1808,7 +2214,7 @@ export interface operations {
             };
         };
     };
-    callback: {
+    callback_1: {
         parameters: {
             query: {
                 /** @description 네이버가 전달한 인증 코드 */
@@ -1829,9 +2235,7 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "*/*": components["schemas"]["ApiResponseLoginResponse"];
-                };
+                content?: never;
             };
             /** @description 인증 토큰이 없거나 만료되었습니다. */
             401: {
@@ -1891,13 +2295,60 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponseError"];
                 };
             };
-            /** @description ADMIN 권한 없음 */
+            /** @description 접근 권한 없음 (ADMIN 전용) */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponsePageUserSummaryResponse"];
+                };
+            };
+            /** @description 서버 내부 오류. 동일한 요청이 반복되면 백엔드 팀에 문의하세요. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseError"];
+                };
+            };
+        };
+    };
+    getMenuStats: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 통계 조회 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListMenuClickStatResponse"];
+                };
+            };
+            /** @description 인증 토큰이 없거나 만료되었습니다. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseError"];
+                };
+            };
+            /** @description 접근 권한 없음 (ADMIN 전용) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListMenuClickStatResponse"];
                 };
             };
             /** @description 서버 내부 오류. 동일한 요청이 반복되면 백엔드 팀에 문의하세요. */
@@ -2057,6 +2508,58 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseNewsListResponse"];
+                };
+            };
+            /** @description 인증 토큰이 없거나 만료되었습니다. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseError"];
+                };
+            };
+            /** @description 서버 내부 오류. 동일한 요청이 반복되면 백엔드 팀에 문의하세요. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseError"];
+                };
+            };
+        };
+    };
+    getMenuGroup: {
+        parameters: {
+            query?: {
+                /** @description 로그인 사용자 ID */
+                userId?: string;
+                /** @description 비회원 식별자 */
+                guestId?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 그룹 조회 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseAbTestGroupResponse"];
+                };
+            };
+            /** @description userId 또는 guestId 중 하나 필수 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseAbTestGroupResponse"];
                 };
             };
             /** @description 인증 토큰이 없거나 만료되었습니다. */

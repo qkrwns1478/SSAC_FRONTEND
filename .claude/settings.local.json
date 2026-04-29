@@ -78,7 +78,9 @@
       "Bash(src/components/notification/NotificationDropdown.tsx)",
       "Bash(useNavData.ts)",
       "Bash(DesktopNav.tsx)",
-      "Bash(/api/v1/users/me/nickname)"
+      "Bash(/api/v1/users/me/nickname)",
+      "Read(//usr/**)",
+      "Read(//usr/local/**)"
     ]
   }
 }

@@ -1,3 +1,11 @@
+## 2026-04-29 20:47 동기화
+
+**추가된 엔드포인트:**
+  + GET /api/ab-test/menu
+  + GET /api/v1/admin/menu-stats
+  + POST /api/events/menu-click
+
+
 ## 2026-04-28 14:58 동기화
 
 **추가된 엔드포인트:**
