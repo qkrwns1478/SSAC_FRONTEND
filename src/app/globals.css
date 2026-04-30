@@ -25,3 +25,16 @@
     @apply mx-auto max-w-6xl px-4 sm:px-6;
   }
 }
+
+[data-tagline-animate='true'] {
+  animation: tagline-fadein 900ms ease-in-out forwards;
+}
+
+@keyframes tagline-fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
