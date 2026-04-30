@@ -11,6 +11,7 @@ import {
   NewsSkeleton,
 } from '@/features/home/HomeSkeleton';
 import { SearchBar } from '@/features/home/SearchBar';
+import { ServiceTagline } from '@/features/home/ServiceTagline';
 
 export const metadata: Metadata = {
   title: '홈',
@@ -33,12 +34,7 @@ export default function HomePage() {
     <div className="container-page py-12">
       {/* Hero — 정적 콘텐츠, 즉시 렌더링 */}
       <section className="mb-16 text-center">
-        <h1 className="mb-4 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-          SSAC Frontend
-        </h1>
-        <p className="mx-auto max-w-xl text-lg text-gray-500">
-          Next.js · TypeScript · Tailwind CSS 기반의 Production-ready 스타터 템플릿
-        </p>
+        <ServiceTagline />
         <div className="mx-auto mt-8 max-w-xl">
           <SearchBar />
         </div>
