@@ -84,7 +84,10 @@
       "Bash(useMenuTracking)",
       "Bash(NAV_ITEMS_BY_GROUP[abGroup ?? \\\\\"A\\\\\"])",
       "Bash(track)",
-      "Bash(MobileMenu.tsx)"
+      "Bash(MobileMenu.tsx)",
+      "Bash(src/features/home/SplashScreen.tsx)",
+      "Bash(src/app/globals.css)",
+      "Bash(public/sprout_8522511.gif)"
     ]
   }
 }
