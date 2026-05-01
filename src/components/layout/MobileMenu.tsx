@@ -9,6 +9,7 @@ import { NAV_ITEMS_BY_GROUP, SEGMENT_NAV_ITEMS } from '@/lib/navigation';
 import type { NavItem } from '@/lib/navigation';
 import { useNavData } from '@/hooks/useNavData';
 import { useMenuTracking } from '@/hooks/useMenuTracking';
+import { ThemeToggle } from './ThemeToggle';
 import type { components } from '@/api-contract/generated/api-types';
 
 type NotificationItemResponse = components['schemas']['NotificationItemResponse'];
@@ -212,7 +213,7 @@ export function MobileMenu({ appName, isLoggedIn }: { appName: string; isLoggedI
           aria-expanded={isOpen}
           aria-controls="mobile-nav-drawer"
           onClick={() => setIsOpen((v) => !v)}
-          className="flex h-10 w-10 items-center justify-center rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
+          className="flex h-10 w-10 items-center justify-center rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100"
         >
           {isOpen ? <CloseIcon /> : <HamburgerIcon />}
         </button>
@@ -239,21 +240,26 @@ export function MobileMenu({ appName, isLoggedIn }: { appName: string; isLoggedI
               aria-modal="true"
               aria-label="메뉴"
               className={cn(
-                'fixed inset-y-0 right-0 z-[110] flex w-72 flex-col bg-white transition-all duration-300',
+                'fixed inset-y-0 right-0 z-[110] flex w-72 flex-col bg-white transition-all duration-300 dark:bg-slate-900',
                 isOpen ? 'translate-x-0 shadow-2xl' : 'translate-x-full shadow-none',
               )}
             >
               {/* 드로어 헤더 */}
-              <div className="flex h-16 items-center justify-between border-b border-gray-200 px-5">
-                <span className="text-base font-bold text-gray-900">{appName}</span>
-                <button
-                  type="button"
-                  aria-label="메뉴 닫기"
-                  onClick={() => setIsOpen(false)}
-                  className="flex h-9 w-9 items-center justify-center rounded-md text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
-                >
-                  <CloseIcon />
-                </button>
+              <div className="flex h-16 items-center justify-between border-b border-gray-200 px-5 dark:border-slate-700">
+                <span className="text-base font-bold text-gray-900 dark:text-slate-100">
+                  {appName}
+                </span>
+                <div className="flex items-center gap-1">
+                  <ThemeToggle />
+                  <button
+                    type="button"
+                    aria-label="메뉴 닫기"
+                    onClick={() => setIsOpen(false)}
+                    className="flex h-9 w-9 items-center justify-center rounded-md text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100"
+                  >
+                    <CloseIcon />
+                  </button>
+                </div>
               </div>
 
               {/* 메뉴 아이템 */}
@@ -271,7 +277,7 @@ export function MobileMenu({ appName, isLoggedIn }: { appName: string; isLoggedI
                           className={cn(
                             'flex items-center gap-3 rounded-lg bg-blue-50 px-3 py-2.5 text-sm font-medium text-blue-700 transition-colors',
                             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1',
-                            'hover:bg-blue-100',
+                            'hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50',
                           )}
                         >
                           <svg
@@ -301,6 +307,7 @@ export function MobileMenu({ appName, isLoggedIn }: { appName: string; isLoggedI
                         className={cn(
                           'flex items-center gap-3 rounded-lg border border-blue-100 bg-blue-50 px-3 py-2.5 text-sm font-medium text-blue-600 transition-colors',
                           'hover:bg-blue-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1',
+                          'dark:border-blue-800 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50',
                         )}
                       >
                         <svg
@@ -350,7 +357,7 @@ export function MobileMenu({ appName, isLoggedIn }: { appName: string; isLoggedI
                             className={cn(
                               'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
                               'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1',
-                              'text-gray-400 hover:bg-gray-50 hover:text-gray-500',
+                              'text-gray-400 hover:bg-gray-50 hover:text-gray-500 dark:text-slate-600 dark:hover:bg-slate-800 dark:hover:text-slate-500',
                             )}
                           >
                             <NavIcon path={item.iconPath} />
@@ -363,7 +370,7 @@ export function MobileMenu({ appName, isLoggedIn }: { appName: string; isLoggedI
                               strokeLinecap="round"
                               strokeLinejoin="round"
                               aria-hidden="true"
-                              className="h-4 w-4 text-gray-300"
+                              className="h-4 w-4 text-gray-300 dark:text-slate-600"
                             >
                               <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                             </svg>
@@ -383,8 +390,8 @@ export function MobileMenu({ appName, isLoggedIn }: { appName: string; isLoggedI
                               'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
                               'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1',
                               active
-                                ? 'bg-blue-50 text-blue-700'
-                                : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900',
+                                ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+                                : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-slate-100',
                             )}
                           >
                             <NavIcon path={item.iconPath} />
@@ -404,8 +411,8 @@ export function MobileMenu({ appName, isLoggedIn }: { appName: string; isLoggedI
                             'flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
                             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1',
                             active || isExpanded
-                              ? 'bg-blue-50 text-blue-700'
-                              : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900',
+                              ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+                              : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-slate-100',
                           )}
                         >
                           <NavIcon path={item.iconPath} />
@@ -414,7 +421,7 @@ export function MobileMenu({ appName, isLoggedIn }: { appName: string; isLoggedI
                         </button>
 
                         {isExpanded && (
-                          <ul className="mt-1 ml-4 space-y-1 border-l-2 border-gray-100 pl-3">
+                          <ul className="mt-1 ml-4 space-y-1 border-l-2 border-gray-100 pl-3 dark:border-slate-700">
                             {item.children.map((child) => {
                               const childActive = pathname === child.href;
                               return (
@@ -427,8 +434,8 @@ export function MobileMenu({ appName, isLoggedIn }: { appName: string; isLoggedI
                                       'block rounded-lg px-3 py-2 text-sm transition-colors',
                                       'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1',
                                       childActive
-                                        ? 'font-medium text-blue-700'
-                                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
+                                        ? 'font-medium text-blue-700 dark:text-blue-400'
+                                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100',
                                     )}
                                   >
                                     {child.label}
@@ -453,8 +460,8 @@ export function MobileMenu({ appName, isLoggedIn }: { appName: string; isLoggedI
                           'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
                           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1',
                           isActive(item.href)
-                            ? 'bg-blue-50 text-blue-700'
-                            : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900',
+                            ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+                            : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-slate-100',
                         )}
                       >
                         <NavIcon path={item.iconPath} />
@@ -465,7 +472,10 @@ export function MobileMenu({ appName, isLoggedIn }: { appName: string; isLoggedI
                 </ul>
 
                 {/* 구분선 + 인증 영역 */}
-                <div aria-hidden="true" className="my-3 border-t border-gray-100" />
+                <div
+                  aria-hidden="true"
+                  className="my-3 border-t border-gray-100 dark:border-slate-800"
+                />
 
                 <ul className="space-y-1">
                   {isLoggedIn ? (
@@ -479,8 +489,9 @@ export function MobileMenu({ appName, isLoggedIn }: { appName: string; isLoggedI
                           className={cn(
                             'flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
                             'text-gray-700 hover:bg-gray-100 hover:text-gray-900',
+                            'dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-slate-100',
                             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1',
-                            notifOpen && 'bg-gray-100',
+                            notifOpen && 'bg-gray-100 dark:bg-slate-800',
                           )}
                         >
                           <span className="relative flex h-5 w-5 flex-shrink-0 items-center justify-center">
@@ -506,7 +517,9 @@ export function MobileMenu({ appName, isLoggedIn }: { appName: string; isLoggedI
                           </span>
                           <span className="flex-1 text-left">알림</span>
                           {hasUnread && (
-                            <span className="text-xs text-gray-400">읽지 않음 {unreadCount}개</span>
+                            <span className="text-xs text-gray-400 dark:text-slate-500">
+                              읽지 않음 {unreadCount}개
+                            </span>
                           )}
                           <svg
                             viewBox="0 0 24 24"
@@ -527,10 +540,10 @@ export function MobileMenu({ appName, isLoggedIn }: { appName: string; isLoggedI
 
                         {/* 인라인 알림 패널 */}
                         {notifOpen && (
-                          <div className="mt-1 ml-4 overflow-hidden rounded-lg border border-gray-100 bg-gray-50">
+                          <div className="mt-1 ml-4 overflow-hidden rounded-lg border border-gray-100 bg-gray-50 dark:border-slate-700 dark:bg-slate-800">
                             {/* 전체 읽음 버튼 */}
                             {hasUnread && (
-                              <div className="flex justify-end border-b border-gray-100 px-3 py-2">
+                              <div className="flex justify-end border-b border-gray-100 px-3 py-2 dark:border-slate-700">
                                 <button
                                   type="button"
                                   onClick={handleMarkAllRead}
@@ -547,8 +560,8 @@ export function MobileMenu({ appName, isLoggedIn }: { appName: string; isLoggedI
                                 <>
                                   {[1, 2, 3].map((i) => (
                                     <li key={i} className="flex flex-col gap-1.5 px-3 py-2.5">
-                                      <div className="h-3 w-3/4 animate-pulse rounded bg-gray-200" />
-                                      <div className="h-2.5 w-1/3 animate-pulse rounded bg-gray-100" />
+                                      <div className="h-3 w-3/4 animate-pulse rounded bg-gray-200 dark:bg-slate-700" />
+                                      <div className="h-2.5 w-1/3 animate-pulse rounded bg-gray-100 dark:bg-slate-600" />
                                     </li>
                                   ))}
                                 </>
@@ -566,7 +579,7 @@ export function MobileMenu({ appName, isLoggedIn }: { appName: string; isLoggedI
                                 !notificationsError &&
                                 notifications !== null &&
                                 notifications.length === 0 && (
-                                  <li className="px-3 py-6 text-center text-xs text-gray-400">
+                                  <li className="px-3 py-6 text-center text-xs text-gray-400 dark:text-slate-500">
                                     알림이 없습니다.
                                   </li>
                                 )}
@@ -586,8 +599,8 @@ export function MobileMenu({ appName, isLoggedIn }: { appName: string; isLoggedI
                                         'flex w-full flex-col gap-0.5 px-3 py-2.5 text-left transition-colors',
                                         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500',
                                         !item.isRead
-                                          ? 'bg-blue-50 hover:bg-blue-100'
-                                          : 'hover:bg-gray-100',
+                                          ? 'bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/30 dark:hover:bg-blue-900/50'
+                                          : 'hover:bg-gray-100 dark:hover:bg-slate-700',
                                       )}
                                     >
                                       <div className="flex items-start gap-1.5">
@@ -601,14 +614,14 @@ export function MobileMenu({ appName, isLoggedIn }: { appName: string; isLoggedI
                                           className={cn(
                                             'flex-1 text-xs leading-snug',
                                             item.isRead
-                                              ? 'text-gray-500'
-                                              : 'font-medium text-gray-900',
+                                              ? 'text-gray-500 dark:text-slate-500'
+                                              : 'font-medium text-gray-900 dark:text-slate-100',
                                           )}
                                         >
                                           {item.message}
                                         </span>
                                       </div>
-                                      <span className="pl-3 text-[11px] text-gray-400">
+                                      <span className="pl-3 text-[11px] text-gray-400 dark:text-slate-500">
                                         {formatDate(item.createdAt)}
                                       </span>
                                     </button>
@@ -629,8 +642,8 @@ export function MobileMenu({ appName, isLoggedIn }: { appName: string; isLoggedI
                             'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
                             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1',
                             pathname.startsWith('/my')
-                              ? 'bg-blue-50 text-blue-700'
-                              : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900',
+                              ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+                              : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-slate-100',
                           )}
                         >
                           <svg
@@ -657,6 +670,7 @@ export function MobileMenu({ appName, isLoggedIn }: { appName: string; isLoggedI
                           className={cn(
                             'flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
                             'text-red-600 hover:bg-red-50 hover:text-red-700',
+                            'dark:text-red-400 dark:hover:bg-red-900/20 dark:hover:text-red-400',
                             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-1',
                           )}
                         >
@@ -686,8 +700,8 @@ export function MobileMenu({ appName, isLoggedIn }: { appName: string; isLoggedI
                             'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
                             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1',
                             pathname === '/login'
-                              ? 'bg-blue-50 text-blue-700'
-                              : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900',
+                              ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+                              : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-slate-100',
                           )}
                         >
                           <svg

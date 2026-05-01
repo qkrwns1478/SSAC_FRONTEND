@@ -8,6 +8,7 @@ import { NAV_ITEMS_BY_GROUP, SEGMENT_NAV_ITEMS } from '@/lib/navigation';
 import { useNavData } from '@/hooks/useNavData';
 import { useMenuTracking } from '@/hooks/useMenuTracking';
 import { NotificationDropdown } from '@/components/notification/NotificationDropdown';
+import { ThemeToggle } from './ThemeToggle';
 import type { NavItem } from '@/lib/navigation';
 
 // ── Inline SVG helpers ────────────────────────────────────────────────────────
@@ -70,7 +71,9 @@ function NavLink({
       className={cn(
         'relative flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium transition-colors',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1',
-        active ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900',
+        active
+          ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+          : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100',
       )}
     >
       <NavIcon path={item.iconPath} />
@@ -135,8 +138,8 @@ function DropdownItem({
           'flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium transition-colors',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1',
           active || isOpen
-            ? 'bg-blue-50 text-blue-700'
-            : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900',
+            ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+            : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100',
         )}
       >
         <NavIcon path={item.iconPath} />
@@ -147,7 +150,7 @@ function DropdownItem({
       {isOpen && (
         <ul
           id={dropdownId(item.href)}
-          className="absolute left-0 top-full z-50 mt-1.5 w-60 overflow-hidden rounded-xl border border-gray-200 bg-white py-1.5 shadow-lg"
+          className="absolute left-0 top-full z-50 mt-1.5 w-60 overflow-hidden rounded-xl border border-gray-200 bg-white py-1.5 shadow-lg dark:border-slate-700 dark:bg-slate-800"
         >
           {item.children!.map((child) => {
             const childActive = pathname === child.href;
@@ -165,12 +168,14 @@ function DropdownItem({
                     'block px-4 py-2.5 transition-colors',
                     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500',
                     childActive
-                      ? 'bg-blue-50 text-blue-700'
-                      : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900',
+                      ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+                      : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-slate-100',
                   )}
                 >
                   <span className="block text-sm font-medium">{child.label}</span>
-                  <span className="mt-0.5 block text-xs text-gray-500">{child.description}</span>
+                  <span className="mt-0.5 block text-xs text-gray-500 dark:text-slate-500">
+                    {child.description}
+                  </span>
                 </Link>
               </li>
             );
@@ -210,7 +215,7 @@ function NotificationBell({
         aria-label={hasUnread ? `읽지 않은 알림 ${unreadCount}개` : '알림'}
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
-        className="relative flex h-8 w-8 items-center justify-center rounded-md text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
+        className="relative flex h-8 w-8 items-center justify-center rounded-md text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100 dark:focus-visible:ring-offset-slate-900"
       >
         {/* 벨 아이콘 */}
         <svg
@@ -417,7 +422,7 @@ export function DesktopNav({ isLoggedIn }: { isLoggedIn: boolean }) {
               className={cn(
                 'flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium transition-colors',
                 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1',
-                'text-gray-400 hover:bg-gray-50 hover:text-gray-500',
+                'text-gray-400 hover:bg-gray-50 hover:text-gray-500 dark:text-slate-600 dark:hover:bg-slate-800 dark:hover:text-slate-500',
               )}
             >
               <NavIcon path={item.iconPath} />
@@ -430,7 +435,7 @@ export function DesktopNav({ isLoggedIn }: { isLoggedIn: boolean }) {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 aria-hidden="true"
-                className="h-3 w-3 text-gray-300"
+                className="h-3 w-3 text-gray-300 dark:text-slate-600"
               >
                 <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
@@ -471,8 +476,14 @@ export function DesktopNav({ isLoggedIn }: { isLoggedIn: boolean }) {
         />
       ))}
 
+      {/* 테마 전환 버튼 */}
+      <ThemeToggle />
+
       {/* 구분선 */}
-      <div aria-hidden="true" className="mx-1.5 h-5 border-l border-gray-200" />
+      <div
+        aria-hidden="true"
+        className="mx-1.5 h-5 border-l border-gray-200 dark:border-slate-700"
+      />
 
       {/* 인증 영역 */}
       {isLoggedIn ? (
@@ -496,6 +507,7 @@ export function DesktopNav({ isLoggedIn }: { isLoggedIn: boolean }) {
               className={cn(
                 'flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium transition-colors',
                 'text-gray-600 hover:bg-gray-100 hover:text-gray-900',
+                'dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100',
                 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1',
               )}
             >
@@ -525,8 +537,8 @@ export function DesktopNav({ isLoggedIn }: { isLoggedIn: boolean }) {
               'flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium transition-colors',
               'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1',
               pathname.startsWith('/my')
-                ? 'bg-blue-50 text-blue-700'
-                : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900',
+                ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+                : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100',
             )}
           >
             <svg
@@ -551,6 +563,7 @@ export function DesktopNav({ isLoggedIn }: { isLoggedIn: boolean }) {
             className={cn(
               'flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium transition-colors',
               'text-gray-600 hover:bg-gray-100 hover:text-gray-900',
+              'dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100',
               'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1',
             )}
           >
@@ -578,6 +591,7 @@ export function DesktopNav({ isLoggedIn }: { isLoggedIn: boolean }) {
             className={cn(
               'flex items-center gap-1 rounded-full border border-blue-100 bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-600 transition-colors',
               'hover:bg-blue-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1',
+              'dark:border-blue-800 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50',
             )}
           >
             <svg
@@ -601,8 +615,8 @@ export function DesktopNav({ isLoggedIn }: { isLoggedIn: boolean }) {
               'flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium transition-colors',
               'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1',
               pathname === '/login'
-                ? 'bg-blue-50 text-blue-700'
-                : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900',
+                ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+                : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100',
             )}
           >
             로그인

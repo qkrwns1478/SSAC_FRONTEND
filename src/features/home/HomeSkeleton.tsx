@@ -2,7 +2,7 @@
 // Used as Suspense fallbacks while Server Components fetch data.
 
 function SkeletonBlock({ className }: { className: string }) {
-  return <div className={`animate-pulse rounded-lg bg-gray-200 ${className}`} />;
+  return <div className={`animate-pulse rounded-lg bg-gray-200 dark:bg-slate-700 ${className}`} />;
 }
 
 export function CarouselSkeleton() {
@@ -29,7 +29,7 @@ export function QuizSkeleton() {
         </div>
         <SkeletonBlock className="h-6 w-12 rounded-full" />
       </div>
-      <div className="rounded-2xl border border-gray-100 bg-white p-6 sm:p-8">
+      <div className="rounded-2xl border border-gray-100 bg-white p-6 dark:border-slate-700 dark:bg-slate-800 sm:p-8">
         <div className="mb-5 flex items-center justify-between">
           <div className="flex gap-2">
             {Array.from({ length: 3 }).map((_, i) => (
@@ -58,7 +58,10 @@ export function ContentSkeleton() {
       <SkeletonBlock className="h-10 w-40 mb-6" />
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="rounded-xl border border-gray-100 bg-white p-6">
+          <div
+            key={i}
+            className="rounded-xl border border-gray-100 bg-white p-6 dark:border-slate-700 dark:bg-slate-800"
+          >
             <SkeletonBlock className="h-5 w-full mb-2" />
             <SkeletonBlock className="h-5 w-5/6 mb-4" />
             <SkeletonBlock className="h-4 w-full mb-1" />
@@ -76,14 +79,17 @@ export function NewsSkeleton() {
     <section className="mb-12">
       <div className="mb-4 flex items-center justify-between">
         <SkeletonBlock className="h-10 w-32" />
-        <div className="flex gap-1 rounded-lg border border-gray-200 bg-gray-50 p-1">
+        <div className="flex gap-1 rounded-lg border border-gray-200 bg-gray-50 p-1 dark:border-slate-700 dark:bg-slate-800">
           <SkeletonBlock className="h-8 w-16 rounded-md" />
           <SkeletonBlock className="h-8 w-20 rounded-md" />
         </div>
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
         {Array.from({ length: 8 }).map((_, i) => (
-          <div key={i} className="rounded-xl border border-gray-100 bg-white p-5">
+          <div
+            key={i}
+            className="rounded-xl border border-gray-100 bg-white p-5 dark:border-slate-700 dark:bg-slate-800"
+          >
             <div className="mb-3 flex items-center justify-between">
               <SkeletonBlock className="h-5 w-16 rounded-full" />
               <SkeletonBlock className="h-4 w-20" />

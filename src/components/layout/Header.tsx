@@ -19,7 +19,7 @@ export async function Header() {
   const isLoggedIn = cookieStore.has('accessToken');
 
   return (
-    <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/90 backdrop-blur-sm">
+    <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/90 backdrop-blur-sm dark:border-slate-700 dark:bg-slate-900/90">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
         {/* 브랜딩 — 마스코트 이미지 + 서비스명 */}
         <NavBranding />

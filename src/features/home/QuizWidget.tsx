@@ -36,7 +36,7 @@ function ProgressDots({ total, current }: { total: number; current: number }) {
               ? 'w-2.5 bg-blue-500'
               : i === current
                 ? 'w-6 bg-blue-500'
-                : 'w-2.5 bg-gray-200',
+                : 'w-2.5 bg-gray-200 dark:bg-slate-600',
           )}
         />
       ))}
@@ -64,10 +64,10 @@ function ResultScreen({
     <div className="flex flex-col items-center gap-6 py-4 text-center">
       <div className="text-5xl">{emoji}</div>
       <div>
-        <p className="text-3xl font-bold text-gray-900">
+        <p className="text-3xl font-bold text-gray-900 dark:text-slate-100">
           {score} / {total}
         </p>
-        <p className="mt-1 text-sm text-gray-500">
+        <p className="mt-1 text-sm text-gray-500 dark:text-slate-400">
           {pct === 100
             ? '완벽해요! 금융 고수네요 👏'
             : pct >= 66
@@ -91,7 +91,7 @@ function ResultScreen({
               )}
             >
               <span className="mt-0.5 shrink-0 text-base">{attempt.isCorrect ? '✅' : '❌'}</span>
-              <p className="line-clamp-2 text-gray-700">{quiz.question}</p>
+              <p className="line-clamp-2 text-gray-700 dark:text-slate-300">{quiz.question}</p>
             </div>
           );
         })}
@@ -216,7 +216,7 @@ export function QuizWidget({ pool }: QuizWidgetProps) {
     <div className="flex flex-col gap-5">
       <div className="flex items-center justify-between">
         <ProgressDots total={currentItems.length} current={currentIdx} />
-        <span className="text-xs font-medium text-gray-400">
+        <span className="text-xs font-medium text-gray-400 dark:text-slate-500">
           {currentIdx + 1} / {currentItems.length}
         </span>
       </div>
@@ -235,7 +235,7 @@ export function QuizWidget({ pool }: QuizWidgetProps) {
         </span>
       </div>
 
-      <p className="text-base font-semibold leading-relaxed text-gray-900 sm:text-lg">
+      <p className="text-base font-semibold leading-relaxed text-gray-900 dark:text-slate-100 sm:text-lg">
         Q{currentIdx + 1}. {current.question}
       </p>
 
@@ -253,10 +253,13 @@ export function QuizWidget({ pool }: QuizWidgetProps) {
               className={cn(
                 'w-full rounded-xl border-2 px-4 py-3 text-left text-sm font-medium transition-all duration-200',
                 !revealed &&
-                  'border-gray-200 bg-white text-gray-700 hover:border-blue-400 hover:bg-blue-50 active:scale-[0.99]',
+                  'border-gray-200 bg-white text-gray-700 hover:border-blue-400 hover:bg-blue-50 active:scale-[0.99] dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 dark:hover:border-blue-500 dark:hover:bg-blue-900/30',
                 revealed && isCorrect && 'border-emerald-500 bg-emerald-50 text-emerald-800',
                 revealed && isSelected && !isCorrect && 'border-rose-400 bg-rose-50 text-rose-700',
-                revealed && !isSelected && !isCorrect && 'border-gray-100 bg-gray-50 text-gray-400',
+                revealed &&
+                  !isSelected &&
+                  !isCorrect &&
+                  'border-gray-100 bg-gray-50 text-gray-400 dark:border-slate-700 dark:bg-slate-700/50 dark:text-slate-500',
                 isSubmitting && 'cursor-wait opacity-60',
               )}
             >
@@ -285,7 +288,7 @@ export function QuizWidget({ pool }: QuizWidgetProps) {
           <p className="mb-1 font-semibold">
             {isCorrectAnswer ? '🎉 정답이에요!' : '💡 아쉽지만 괜찮아요!'}
           </p>
-          <p className="text-gray-700">{current.explanation}</p>
+          <p className="text-gray-700 dark:text-slate-300">{current.explanation}</p>
         </div>
       )}
 

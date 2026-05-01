@@ -69,23 +69,27 @@ export function RecommendedSection() {
 
   return (
     <section className="mb-12">
-      <h2 className="mb-4 text-2xl font-bold text-gray-900">{sectionTitle}</h2>
+      <h2 className="mb-4 text-2xl font-bold text-gray-900 dark:text-slate-100">{sectionTitle}</h2>
 
       {state.status === 'error' ? (
         <p className="rounded-xl border border-red-100 bg-red-50 p-6 text-center text-sm text-red-600">
           {state.message}
         </p>
       ) : state.items.length === 0 ? (
-        <p className="rounded-xl border border-gray-100 bg-gray-50 p-10 text-center text-sm text-gray-500">
+        <p className="rounded-xl border border-gray-100 bg-gray-50 p-10 text-center text-sm text-gray-500 dark:border-slate-800 dark:bg-slate-800 dark:text-slate-400">
           추천 콘텐츠가 없습니다.
         </p>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2">
           {state.items.map((item) => (
             <Link key={item.id} href={`/content/${item.id}`}>
-              <article className="h-full rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
-                <h3 className="mb-2 font-semibold text-gray-900">{item.title}</h3>
-                <p className="text-sm leading-relaxed text-gray-500">{item.summary}</p>
+              <article className="h-full rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md dark:border-slate-700 dark:bg-slate-800">
+                <h3 className="mb-2 font-semibold text-gray-900 dark:text-slate-100">
+                  {item.title}
+                </h3>
+                <p className="text-sm leading-relaxed text-gray-500 dark:text-slate-400">
+                  {item.summary}
+                </p>
               </article>
             </Link>
           ))}

@@ -87,7 +87,14 @@
       "Bash(MobileMenu.tsx)",
       "Bash(src/features/home/SplashScreen.tsx)",
       "Bash(src/app/globals.css)",
-      "Bash(public/sprout_8522511.gif)"
+      "Bash(public/sprout_8522511.gif)",
+      "Bash(src/lib/theme.tsx)",
+      "Bash(useSyncExternalStore)",
+      "Bash(src/components/layout/ThemeToggle.tsx)",
+      "Bash(src/app/layout.tsx)",
+      "Bash(@custom-variant dark:*)",
+      "Bash(src/features/content/NewContentSection.tsx)",
+      "Bash(dark:text-slate-100)"
     ]
   }
 }

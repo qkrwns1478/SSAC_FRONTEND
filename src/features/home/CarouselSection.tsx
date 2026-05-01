@@ -6,7 +6,7 @@ export async function CarouselSection() {
 
   return (
     <section className="mb-12">
-      <h2 className="mb-4 text-2xl font-bold text-gray-900">주요 콘텐츠</h2>
+      <h2 className="mb-4 text-2xl font-bold text-gray-900 dark:text-slate-100">주요 콘텐츠</h2>
       <CarouselDisplay items={items} />
     </section>
   );

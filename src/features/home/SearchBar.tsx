@@ -90,9 +90,9 @@ export function SearchBar() {
 
   return (
     <div ref={containerRef} className="relative w-full">
-      <div className="flex items-center overflow-hidden rounded-xl border border-gray-300 bg-white shadow-sm focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-200">
+      <div className="flex items-center overflow-hidden rounded-xl border border-gray-300 bg-white shadow-sm focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-200 dark:border-slate-600 dark:bg-slate-800 dark:focus-within:border-blue-500 dark:focus-within:ring-blue-900">
         {/* 검색 아이콘 */}
-        <span className="pl-4 text-gray-400" aria-hidden="true">
+        <span className="pl-4 text-gray-400 dark:text-slate-500" aria-hidden="true">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-5 w-5"
@@ -130,12 +130,12 @@ export function SearchBar() {
           aria-expanded={isSuggestOpen}
           aria-haspopup="listbox"
           aria-controls="search-suggest-listbox"
-          className="flex-1 bg-transparent px-3 py-3 text-sm text-gray-900 placeholder-gray-400 outline-none"
+          className="flex-1 bg-transparent px-3 py-3 text-sm text-gray-900 placeholder-gray-400 outline-none dark:text-slate-100 dark:placeholder-slate-500"
         />
 
         {/* 글자 수 */}
         {query.length > 0 && (
-          <span className="pr-2 text-xs text-gray-400">
+          <span className="pr-2 text-xs text-gray-400 dark:text-slate-500">
             {query.length}/{MAX_LENGTH}
           </span>
         )}
@@ -157,7 +157,7 @@ export function SearchBar() {
           id="search-suggest-listbox"
           role="listbox"
           aria-label="추천 검색어"
-          className="absolute z-50 mt-1 w-full overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg"
+          className="absolute z-50 mt-1 w-full overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-800"
         >
           {suggestions.map((s, i) => (
             <li
@@ -168,13 +168,13 @@ export function SearchBar() {
               onMouseEnter={() => setActiveSuggestionIdx(i)}
               className={`flex cursor-pointer items-center gap-2 px-4 py-2.5 text-sm transition-colors ${
                 i === activeSuggestionIdx
-                  ? 'bg-blue-50 text-blue-700'
-                  : 'text-gray-700 hover:bg-gray-50'
+                  ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+                  : 'text-gray-700 hover:bg-gray-50 dark:text-slate-300 dark:hover:bg-slate-700'
               }`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-3.5 w-3.5 flex-shrink-0 text-gray-400"
+                className="h-3.5 w-3.5 flex-shrink-0 text-gray-400 dark:text-slate-500"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -188,7 +188,11 @@ export function SearchBar() {
                 />
               </svg>
               <span>{s.keyword}</span>
-              {s.count > 0 && <span className="ml-auto text-xs text-gray-400">{s.count}회</span>}
+              {s.count > 0 && (
+                <span className="ml-auto text-xs text-gray-400 dark:text-slate-500">
+                  {s.count}회
+                </span>
+              )}
             </li>
           ))}
         </ul>

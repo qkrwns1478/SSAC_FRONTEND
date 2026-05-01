@@ -48,7 +48,7 @@ export function NewsSectionClient({ initialItems, initialError = false }: Props)
   return (
     <section className="mb-12">
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-900">금융 뉴스</h2>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100">금융 뉴스</h2>
         <SortTabs sort={sort} onChange={handleSortChange} />
       </div>
 
@@ -61,7 +61,7 @@ export function NewsSectionClient({ initialItems, initialError = false }: Props)
       )}
 
       {!loading && !error && items.length === 0 && (
-        <div className="rounded-xl border border-gray-100 bg-gray-50 p-10 text-center text-sm text-gray-500">
+        <div className="rounded-xl border border-gray-100 bg-gray-50 p-10 text-center text-sm text-gray-500 dark:border-slate-800 dark:bg-slate-800 dark:text-slate-400">
           표시할 뉴스가 없습니다.
         </div>
       )}
@@ -79,13 +79,15 @@ export function NewsSectionClient({ initialItems, initialError = false }: Props)
 
 function SortTabs({ sort, onChange }: { sort: NewsSortType; onChange: (s: NewsSortType) => void }) {
   return (
-    <div className="flex rounded-lg border border-gray-200 bg-gray-50 p-1">
+    <div className="flex rounded-lg border border-gray-200 bg-gray-50 p-1 dark:border-slate-700 dark:bg-slate-800">
       {(Object.keys(SORT_LABELS) as NewsSortType[]).map((key) => (
         <button
           key={key}
           onClick={() => onChange(key)}
           className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
-            sort === key ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+            sort === key
+              ? 'bg-white text-blue-600 shadow-sm dark:bg-slate-700 dark:text-blue-400'
+              : 'text-gray-500 hover:text-gray-700 dark:text-slate-400 dark:hover:text-slate-200'
           }`}
           aria-pressed={sort === key}
         >
@@ -100,17 +102,20 @@ function NewsListSkeleton() {
   return (
     <div className="grid gap-4 sm:grid-cols-2">
       {Array.from({ length: 8 }).map((_, i) => (
-        <div key={i} className="animate-pulse rounded-xl border border-gray-100 bg-white p-5">
+        <div
+          key={i}
+          className="animate-pulse rounded-xl border border-gray-100 bg-white p-5 dark:border-slate-800 dark:bg-slate-800"
+        >
           <div className="mb-3 flex items-center justify-between">
-            <div className="h-4 w-20 rounded bg-gray-200" />
-            <div className="h-4 w-16 rounded bg-gray-200" />
+            <div className="h-4 w-20 rounded bg-gray-200 dark:bg-slate-700" />
+            <div className="h-4 w-16 rounded bg-gray-200 dark:bg-slate-700" />
           </div>
-          <div className="mb-1 h-5 w-full rounded bg-gray-200" />
-          <div className="mb-3 h-5 w-5/6 rounded bg-gray-200" />
-          <div className="mb-1 h-4 w-full rounded bg-gray-200" />
-          <div className="mb-1 h-4 w-full rounded bg-gray-200" />
-          <div className="mb-3 h-4 w-2/3 rounded bg-gray-200" />
-          <div className="h-3 w-24 rounded bg-gray-200" />
+          <div className="mb-1 h-5 w-full rounded bg-gray-200 dark:bg-slate-700" />
+          <div className="mb-3 h-5 w-5/6 rounded bg-gray-200 dark:bg-slate-700" />
+          <div className="mb-1 h-4 w-full rounded bg-gray-200 dark:bg-slate-700" />
+          <div className="mb-1 h-4 w-full rounded bg-gray-200 dark:bg-slate-700" />
+          <div className="mb-3 h-4 w-2/3 rounded bg-gray-200 dark:bg-slate-700" />
+          <div className="h-3 w-24 rounded bg-gray-200 dark:bg-slate-700" />
         </div>
       ))}
     </div>
@@ -119,17 +124,23 @@ function NewsListSkeleton() {
 
 function NewsCard({ item }: { item: NewsItemResponse }) {
   return (
-    <article className="flex flex-col gap-3 rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
+    <article className="flex flex-col gap-3 rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md dark:border-slate-700 dark:bg-slate-800">
       <div className="flex items-center justify-between">
-        <time dateTime={item.publishedAt} className="text-xs text-gray-400">
+        <time dateTime={item.publishedAt} className="text-xs text-gray-400 dark:text-slate-500">
           {formatRelativeTime(item.publishedAt ?? '')}
         </time>
         {item.viewCount !== undefined && (
-          <span className="text-xs text-gray-400">조회 {item.viewCount.toLocaleString()}</span>
+          <span className="text-xs text-gray-400 dark:text-slate-500">
+            조회 {item.viewCount.toLocaleString()}
+          </span>
         )}
       </div>
-      <h3 className="line-clamp-2 font-semibold leading-snug text-gray-900">{item.title}</h3>
-      <p className="line-clamp-3 flex-1 text-sm leading-relaxed text-gray-500">{item.summary}</p>
+      <h3 className="line-clamp-2 font-semibold leading-snug text-gray-900 dark:text-slate-100">
+        {item.title}
+      </h3>
+      <p className="line-clamp-3 flex-1 text-sm leading-relaxed text-gray-500 dark:text-slate-400">
+        {item.summary}
+      </p>
     </article>
   );
 }

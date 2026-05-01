@@ -37,13 +37,17 @@ export default async function ContentDetailPage({ params }: ContentDetailPagePro
           <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
             {detail.category}
           </span>
-          <span className="text-sm text-gray-400">{formatDate(detail.publishedAt)}</span>
+          <span className="text-sm text-gray-400 dark:text-slate-500">
+            {formatDate(detail.publishedAt)}
+          </span>
         </div>
 
-        <h1 className="mb-8 text-3xl font-bold leading-snug text-gray-900">{detail.title}</h1>
+        <h1 className="mb-8 text-3xl font-bold leading-snug text-gray-900 dark:text-slate-100">
+          {detail.title}
+        </h1>
 
-        <div className="rounded-2xl border border-gray-100 bg-white p-8 shadow-sm">
-          <p className="leading-relaxed text-gray-700">{detail.body}</p>
+        <div className="rounded-2xl border border-gray-100 bg-white p-8 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+          <p className="leading-relaxed text-gray-700 dark:text-slate-300">{detail.body}</p>
         </div>
       </article>
     </div>

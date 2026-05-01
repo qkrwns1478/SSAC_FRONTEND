@@ -11,7 +11,7 @@ export const dynamic = 'force-dynamic';
 export default function ContentPage() {
   return (
     <div className="container-page py-12">
-      <h1 className="mb-10 text-3xl font-bold text-gray-900">콘텐츠</h1>
+      <h1 className="mb-10 text-3xl font-bold text-gray-900 dark:text-slate-100">콘텐츠</h1>
 
       <Suspense fallback={<PopularContentSkeleton />}>
         <PopularContentSection />
