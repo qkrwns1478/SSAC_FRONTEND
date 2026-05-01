@@ -30,8 +30,8 @@ function formatDate(dateStr: string | undefined): string {
 function SkeletonItem() {
   return (
     <li className="flex flex-col gap-1.5 px-4 py-3">
-      <div className="h-3.5 w-3/4 animate-pulse rounded bg-gray-200" />
-      <div className="h-3 w-1/3 animate-pulse rounded bg-gray-100" />
+      <div className="h-3.5 w-3/4 animate-pulse rounded bg-gray-200 dark:bg-slate-700" />
+      <div className="h-3 w-1/3 animate-pulse rounded bg-gray-100 dark:bg-slate-600" />
     </li>
   );
 }
@@ -73,11 +73,11 @@ export function NotificationDropdown({
       ref={ref}
       role="dialog"
       aria-label="알림 목록"
-      className="absolute right-0 top-full z-50 mt-2 w-80 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg"
+      className="absolute right-0 top-full z-50 mt-2 w-80 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-800"
     >
       {/* 헤더 */}
-      <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3">
-        <span className="text-sm font-semibold text-gray-900">알림</span>
+      <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3 dark:border-slate-700">
+        <span className="text-sm font-semibold text-gray-900 dark:text-slate-100">알림</span>
         {hasUnread && (
           <button
             type="button"
@@ -109,7 +109,9 @@ export function NotificationDropdown({
 
         {/* Empty State */}
         {!loading && !error && notifications !== null && notifications.length === 0 && (
-          <li className="px-4 py-8 text-center text-sm text-gray-400">알림이 없습니다.</li>
+          <li className="px-4 py-8 text-center text-sm text-gray-400 dark:text-slate-500">
+            알림이 없습니다.
+          </li>
         )}
 
         {/* 알림 목록 */}
@@ -124,9 +126,10 @@ export function NotificationDropdown({
                   if (!item.isRead && item.id) onMarkRead(item.id);
                 }}
                 className={cn(
-                  'flex w-full flex-col gap-0.5 px-4 py-3 text-left transition-colors hover:bg-gray-50',
+                  'flex w-full flex-col gap-0.5 px-4 py-3 text-left transition-colors hover:bg-gray-50 dark:hover:bg-slate-700',
                   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500',
-                  !item.isRead && 'bg-blue-50 hover:bg-blue-100',
+                  !item.isRead &&
+                    'bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/30 dark:hover:bg-blue-900/50',
                 )}
               >
                 <div className="flex items-start gap-2">
@@ -140,13 +143,17 @@ export function NotificationDropdown({
                   <span
                     className={cn(
                       'flex-1 text-sm leading-snug',
-                      item.isRead ? 'text-gray-500' : 'font-medium text-gray-900',
+                      item.isRead
+                        ? 'text-gray-500 dark:text-slate-500'
+                        : 'font-medium text-gray-900 dark:text-slate-100',
                     )}
                   >
                     {item.message}
                   </span>
                 </div>
-                <span className="pl-3.5 text-xs text-gray-400">{formatDate(item.createdAt)}</span>
+                <span className="pl-3.5 text-xs text-gray-400 dark:text-slate-500">
+                  {formatDate(item.createdAt)}
+                </span>
               </button>
             </li>
           ))}

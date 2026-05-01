@@ -1,5 +1,8 @@
 @import 'tailwindcss';
 
+/* data-theme 속성 기반 다크 모드 variant 활성화 */
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
 /* Custom base styles */
 @layer base {
   *,
@@ -15,7 +18,10 @@
   }
 
   body {
-    @apply bg-gray-50 text-gray-900;
+    @apply bg-gray-50 text-gray-900 dark:bg-slate-900 dark:text-slate-100;
+    transition:
+      background-color 300ms ease,
+      color 300ms ease;
   }
 }
 

@@ -18,7 +18,10 @@ export function NavBranding() {
         className="h-8 w-8 object-contain"
         priority
       />
-      <span className="whitespace-nowrap text-lg font-bold text-gray-900" aria-label="SSAC 싹">
+      <span
+        className="whitespace-nowrap text-lg font-bold text-gray-900 dark:text-slate-100"
+        aria-label="SSAC 싹"
+      >
         SSAC(싹)
       </span>
     </Link>

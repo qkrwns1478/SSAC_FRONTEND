@@ -1,5 +1,5 @@
 function SkeletonBlock({ className }: { className: string }) {
-  return <div className={`animate-pulse rounded-lg bg-gray-200 ${className}`} />;
+  return <div className={`animate-pulse rounded-lg bg-gray-200 dark:bg-slate-700 ${className}`} />;
 }
 
 export function PopularContentSkeleton() {
@@ -11,7 +11,10 @@ export function PopularContentSkeleton() {
       </div>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="rounded-xl border border-gray-100 bg-white p-5">
+          <div
+            key={i}
+            className="rounded-xl border border-gray-100 bg-white p-5 dark:border-slate-700 dark:bg-slate-800"
+          >
             <SkeletonBlock className="h-5 w-full mb-3" />
             <SkeletonBlock className="h-5 w-4/5 mb-4" />
             <div className="flex gap-4">
@@ -31,7 +34,10 @@ export function NewContentSkeleton() {
       <SkeletonBlock className="h-8 w-36 mb-4" />
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="rounded-xl border border-gray-100 bg-white p-5">
+          <div
+            key={i}
+            className="rounded-xl border border-gray-100 bg-white p-5 dark:border-slate-700 dark:bg-slate-800"
+          >
             <SkeletonBlock className="h-5 w-full mb-3" />
             <SkeletonBlock className="h-5 w-3/4 mb-4" />
             <SkeletonBlock className="h-4 w-28" />
@@ -48,7 +54,10 @@ export function RecommendedSkeleton() {
       <SkeletonBlock className="h-8 w-44 mb-4" />
       <div className="grid gap-4 sm:grid-cols-2">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="rounded-xl border border-gray-100 bg-white p-5">
+          <div
+            key={i}
+            className="rounded-xl border border-gray-100 bg-white p-5 dark:border-slate-700 dark:bg-slate-800"
+          >
             <SkeletonBlock className="h-5 w-full mb-3" />
             <SkeletonBlock className="h-5 w-5/6 mb-3" />
             <SkeletonBlock className="h-4 w-full mb-1" />

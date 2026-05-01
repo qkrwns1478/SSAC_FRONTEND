@@ -12,3 +12,34 @@
 
   --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
 }
+
+/* ── 라이트 모드 시맨틱 토큰 ──────────────────────────────────────────────── */
+[data-theme='light'] {
+  --background: #ffffff;
+  --background-secondary: #f8fafc;
+  --surface: #ffffff;
+  --surface-elevated: #f1f5f9;
+  --border: #e2e8f0;
+  --border-subtle: #f1f5f9;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+}
+
+/* ── 다크 모드 시맨틱 토큰 ──────────────────────────────────────────────────
+ * WCAG AA 준수:
+ *   일반 텍스트(--text-primary #f1f5f9 on #0f172a): 대비 ~16.5:1 ✅
+ *   보조 텍스트(--text-secondary #cbd5e1 on #0f172a): 대비 ~11.5:1 ✅
+ *   뮤트 텍스트(--text-muted #94a3b8 on #0f172a): 대비 ~7.6:1 ✅
+ * ─────────────────────────────────────────────────────────────────────────── */
+[data-theme='dark'] {
+  --background: #0f172a;
+  --background-secondary: #0f172a;
+  --surface: #1e293b;
+  --surface-elevated: #334155;
+  --border: #334155;
+  --border-subtle: #1e293b;
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+}

@@ -63,7 +63,7 @@ export function LoginForm() {
   };
 
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
+    <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm dark:border-slate-700 dark:bg-slate-800">
       {errorMessage && (
         <div
           role="alert"
@@ -108,12 +108,12 @@ export function LoginForm() {
       </div>
 
       <div className="my-5 flex items-center gap-3">
-        <div className="h-px flex-1 bg-gray-200" />
-        <span className="text-xs text-gray-400">또는</span>
-        <div className="h-px flex-1 bg-gray-200" />
+        <div className="h-px flex-1 bg-gray-200 dark:bg-slate-600" />
+        <span className="text-xs text-gray-400 dark:text-slate-500">또는</span>
+        <div className="h-px flex-1 bg-gray-200 dark:bg-slate-600" />
       </div>
 
-      <p className="mb-3 text-center text-xs text-gray-400">
+      <p className="mb-3 text-center text-xs text-gray-400 dark:text-slate-500">
         현재 목 로그인입니다. 버튼 클릭 시 인증 쿠키가 설정됩니다.
       </p>
       <Button
