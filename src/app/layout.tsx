@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { PostLoginToast } from '@/components/auth/PostLoginToast';
+import { ErrorToast } from '@/components/ui/ErrorToast';
 import { ThemeProvider } from '@/lib/theme';
 import './globals.css';
 
@@ -49,6 +50,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <main className="flex-1">{children}</main>
           <Footer />
           <PostLoginToast />
+          <ErrorToast />
         </ThemeProvider>
       </body>
     </html>

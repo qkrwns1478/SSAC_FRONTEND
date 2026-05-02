@@ -16,10 +16,24 @@ export interface PaginatedResponse<T> {
   totalPages: number;
 }
 
-export interface ApiError {
+export interface FieldError {
+  field: string;
   message: string;
+}
+
+export interface ErrorResponse {
   status: number;
-  errors?: Record<string, string[]>;
+  code: string;
+  message: string;
+  errors?: FieldError[];
+  timestamp: string;
+}
+
+export interface ApiError {
+  status: number;
+  code?: string;
+  message: string;
+  errors?: FieldError[];
 }
 
 // ============================================================
