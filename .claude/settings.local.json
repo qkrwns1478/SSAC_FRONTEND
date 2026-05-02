@@ -94,7 +94,11 @@
       "Bash(src/app/layout.tsx)",
       "Bash(@custom-variant dark:*)",
       "Bash(src/features/content/NewContentSection.tsx)",
-      "Bash(dark:text-slate-100)"
+      "Bash(dark:text-slate-100)",
+      "Bash(src/lib/errorMessages.ts)",
+      "Bash(src/lib/toastStore.ts)",
+      "Bash(src/components/ui/ErrorToast.tsx)",
+      "Bash(src/types/index.ts)"
     ]
   }
 }

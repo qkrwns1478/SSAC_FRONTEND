@@ -1,5 +1,7 @@
 import { env } from '@/lib/env';
-import type { ApiError } from '@/types';
+import { getErrorMessage } from '@/lib/errorMessages';
+import { toastStore } from '@/lib/toastStore';
+import type { ApiError, ErrorResponse } from '@/types';
 
 // ============================================================
 // Core fetch wrapper
@@ -16,6 +18,67 @@ async function tryRefreshToken(): Promise<boolean> {
     return res.ok;
   } catch {
     return false;
+  }
+}
+
+function redirectToLogin(currentPath: string): void {
+  window.location.href = `/login?redirectTo=${encodeURIComponent(currentPath)}`;
+}
+
+function buildApiError(data: Partial<ErrorResponse>, status: number): ApiError {
+  return {
+    status,
+    code: data.code,
+    message: data.message ?? `HTTP ${status}`,
+    errors: data.errors,
+  };
+}
+
+/**
+ * 클라이언트 전용: HTTP 상태 코드별 toast / redirect 사이드이펙트 처리.
+ * AUTH-002(토큰 만료) 재시도 로직은 request()에서 별도 처리.
+ */
+function handleClientError(status: number, data: Partial<ErrorResponse>): void {
+  const message = getErrorMessage(data.code, data.message);
+  const currentPath = window.location.pathname + window.location.search;
+
+  switch (status) {
+    case 400:
+      // errors 배열이 있으면 form 컴포넌트가 필드별로 처리 → toast 생략
+      if (!data.errors?.length) toastStore.show(message);
+      break;
+
+    case 401:
+      if (data.code === 'AUTH-003') {
+        // 유효하지 않은 토큰 → 토스트 없이 즉시 리다이렉트
+        redirectToLogin(currentPath);
+      } else {
+        // AUTH-001 또는 기타 401
+        toastStore.show(getErrorMessage('AUTH-001'));
+        redirectToLogin(currentPath);
+      }
+      break;
+
+    case 403:
+      window.location.href = '/forbidden';
+      break;
+
+    case 404:
+      // Next.js App Router: 실제 라우트가 없는 경로로 이동하면 not-found.tsx 렌더링
+      window.location.href = '/not-found';
+      break;
+
+    case 409:
+      toastStore.show(message);
+      break;
+
+    case 500:
+      toastStore.show(getErrorMessage('SERVER-001'));
+      break;
+
+    default:
+      toastStore.show(message);
+      break;
   }
 }
 
@@ -50,25 +113,24 @@ async function request<T>(
 
   const response = await fetch(url.toString(), fetchOptions);
 
-  // Access Token 만료(401) → Refresh Token으로 재발급 후 재시도 (클라이언트 전용)
-  if (response.status === 401 && !_retried && typeof window !== 'undefined') {
-    const refreshed = await tryRefreshToken();
-    if (refreshed) {
-      return request<T>(endpoint, options, true);
-    }
-    // Refresh Token도 만료 → 로그인 페이지로 이동
-    window.location.href = '/login?error=SESSION_EXPIRED';
-    throw { message: '세션이 만료되었습니다. 다시 로그인해주세요.', status: 401 } as ApiError;
-  }
-
   if (!response.ok) {
-    const errorData = (await response.json().catch(() => ({}))) as Partial<ApiError>;
-    const error: ApiError = {
-      message: errorData.message ?? `HTTP ${response.status}: ${response.statusText}`,
-      status: response.status,
-      errors: errorData.errors,
-    };
-    throw error;
+    const data = (await response.json().catch(() => ({}))) as Partial<ErrorResponse>;
+    const { status } = response;
+
+    if (typeof window !== 'undefined') {
+      // AUTH-002(토큰 만료): Refresh Token으로 재발급 후 원래 요청 재시도
+      if (status === 401 && !_retried && data.code === 'AUTH-002') {
+        const refreshed = await tryRefreshToken();
+        if (refreshed) return request<T>(endpoint, options, true);
+        // 재발급 실패 → 세션 만료 안내 후 로그인 리다이렉트
+        toastStore.show(getErrorMessage('AUTH-002'));
+        redirectToLogin(window.location.pathname + window.location.search);
+      } else {
+        handleClientError(status, data);
+      }
+    }
+
+    throw buildApiError(data, status);
   }
 
   // Handle 204 No Content
