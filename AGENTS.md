@@ -15,14 +15,15 @@ SSAC_FRONTEND — Next.js 15 + TypeScript strict + Tailwind CSS v4.
 
 ## 환경 도구 지도
 
-| 목적                       | 명령                                  | 기계적 진실 위치          |
-| -------------------------- | ------------------------------------- | ------------------------- |
-| 전체 검증 (단일 진입점)    | `npm run validate`                    | `package.json`            |
-| 타입 검사                  | `npm run typecheck`                   | `tsconfig.json`           |
-| 코드 품질 + 레이어(ESLint) | `npm run lint`                        | `eslint.config.mjs`       |
-| 레이어 아키텍처 검사       | `npm run layers`                      | `.dependency-cruiser.cjs` |
-| 포맷 적용                  | `npm run format`                      | `.prettierrc`             |
-| 새 도메인 스캐폴딩         | `npm run scaffold -- --domain=<name>` | `scripts/scaffold.js`     |
+| 목적                       | 명령                                  | 기계적 진실 위치                  |
+| -------------------------- | ------------------------------------- | --------------------------------- |
+| 전체 검증 (단일 진입점)    | `npm run validate`                    | `package.json`                    |
+| 타입 검사                  | `npm run typecheck`                   | `tsconfig.json`                   |
+| 코드 품질 + 레이어(ESLint) | `npm run lint`                        | `eslint.config.mjs`               |
+| 레이어 아키텍처 검사       | `npm run layers`                      | `.dependency-cruiser.cjs`         |
+| 포맷 적용                  | `npm run format`                      | `.prettierrc`                     |
+| 새 도메인 스캐폴딩         | `npm run scaffold -- --domain=<name>` | `scripts/scaffold.js`             |
+| ErrorCode 매핑 검증        | `npm run validate:error-mapping`      | `api-contract/error-contract.yml` |
 
 **커밋 전 자동 실행**: `.githooks/pre-commit` → `npm run validate`
 활성화: `npm install` (prepare 스크립트가 git hooks 경로 설정)
@@ -117,6 +118,39 @@ interface UserResponse {
 4. 타입 오류를 `npm run typecheck` 로 전부 확인한다.
 5. 수정이 완료되면 `npm run validate` 로 전체 검증 후 커밋한다.
 6. 백엔드 팀과 합의 없이 API 경로·파라미터를 임의 변경하지 않는다.
+
+---
+
+---
+
+## ErrorCode Contract 변경 대응 프로토콜
+
+> BE 팀으로부터 Contract 변경 알림(GitHub Issue)을 수신하거나
+> `api-contract/error-contract.yml`이 변경된 것을 감지하면 즉시 아래 절차를 수행합니다.
+
+### 대응 절차
+
+```
+1. api-contract/error-contract.yml 최신 내용 확인
+2. 변경된 ErrorCode 목록 파악 (추가/변경/삭제)
+3. src/constants/errorMessages.ts 매핑 테이블 업데이트
+4. errorMessages.ts 상단 Contract 버전 주석 갱신
+5. npm run validate:error-mapping 검증 통과 확인
+```
+
+### 행동 기준
+
+- **변경 감지 후 즉시 매핑 테이블을 갱신하고 검증을 통과시킨다.**
+- `validate:error-mapping`이 실패하면 다른 작업 전에 먼저 수정한다.
+- BE 팀에 없는 코드를 FE 임의로 추가하지 않는다. 필요 시 BE 팀에 Contract 추가를 요청한다.
+
+### 검증 실패 출력 형식
+
+```
+[ERROR] ErrorCode 매핑 테이블 불일치 발견
+- Contract에 존재하지만 FE 매핑 테이블에 없음: NEWS-002
+→ src/constants/errorMessages.ts를 갱신한 후 다시 실행하세요.
+```
 
 ---
 

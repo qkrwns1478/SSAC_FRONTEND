@@ -1,0 +1,78 @@
+# SSAC ErrorCode Contract
+# 이 파일은 BE 팀이 관리하는 단일 소스입니다.
+# FE는 이 파일을 기준으로 src/constants/errorMessages.ts를 갱신합니다.
+# Contract 변경 시 FE 팀에 GitHub Issue로 알림을 전송하세요.
+#
+# 갱신 절차:
+#   1. version 및 updatedAt 수정
+#   2. errors 목록 추가/변경/삭제
+#   3. FE 팀에 GitHub Issue 생성
+
+version: '1.0.0'
+updatedAt: '2026-05-03'
+
+errors:
+  AUTH-001:
+    message: '인증이 필요합니다.'
+    httpStatus: 401
+    description: 'JWT 액세스 토큰이 없거나 형식이 잘못됨'
+
+  AUTH-002:
+    message: '인증 토큰이 만료되었습니다.'
+    httpStatus: 401
+    description: 'Access Token 또는 Refresh Token 만료'
+
+  AUTH-003:
+    message: '접근 권한이 없습니다.'
+    httpStatus: 403
+    description: '요청한 리소스에 대한 권한 없음'
+
+  AUTH-004:
+    message: '로그인이 필요합니다.'
+    httpStatus: 403
+    description: '로그인 회원 전용 API에 비회원이 접근'
+
+  USER-001:
+    message: '사용자를 찾을 수 없습니다.'
+    httpStatus: 404
+    description: '존재하지 않는 사용자 ID'
+
+  USER-002:
+    message: '이미 사용 중인 닉네임입니다.'
+    httpStatus: 409
+    description: '닉네임 중복'
+
+  USER-003:
+    message: '닉네임이 유효하지 않습니다.'
+    httpStatus: 400
+    description: '닉네임 2~20자, 특수문자 제한 위반'
+
+  QUIZ-001:
+    message: '퀴즈를 찾을 수 없습니다.'
+    httpStatus: 404
+    description: '존재하지 않는 퀴즈 ID'
+
+  QUIZ-002:
+    message: '유효하지 않은 문항 정보입니다.'
+    httpStatus: 400
+    description: '잘못된 문항 ID 또는 답안 형식'
+
+  QUIZ-003:
+    message: '응시 기록을 찾을 수 없습니다.'
+    httpStatus: 404
+    description: '존재하지 않는 응시 기록 ID'
+
+  NEWS-001:
+    message: '뉴스를 찾을 수 없습니다.'
+    httpStatus: 404
+    description: '존재하지 않는 뉴스 ID'
+
+  COMMON-001:
+    message: '서버 내부 오류가 발생했습니다.'
+    httpStatus: 500
+    description: '처리되지 않은 서버 예외'
+
+  COMMON-002:
+    message: '잘못된 요청입니다.'
+    httpStatus: 400
+    description: '요청 파라미터 또는 바디 유효성 검사 실패'

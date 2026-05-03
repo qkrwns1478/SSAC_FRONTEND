@@ -24,7 +24,20 @@ const eslintConfig = [
   },
 
   // ──────────────────────────────────────────────────────────
-  // RULE 2: app/ → services/ 직접 import 금지 [ARCH-001]
+  // RULE 2: scripts/ — Node.js 빌드 도구 규칙 완화
+  // scripts/는 Next.js 앱이 아닌 Node.js 실행 파일이므로
+  // require() 및 console 제한을 적용하지 않습니다.
+  // ──────────────────────────────────────────────────────────
+  {
+    files: ['scripts/**/*.{ts,js,mts,cts}'],
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off',
+      'no-console': 'off',
+    },
+  },
+
+  // ──────────────────────────────────────────────────────────
+  // RULE 3: app/ → services/ 직접 import 금지 [ARCH-001]
   // FIX: features/<domain>/ 컴포넌트를 경유하세요. docs/architecture.md 참고
   // 예외: src/app/api/ Route Handler는 BFF 레이어이므로 services/ 직접 사용 허용.
   // ──────────────────────────────────────────────────────────
@@ -49,7 +62,7 @@ const eslintConfig = [
   },
 
   // ──────────────────────────────────────────────────────────
-  // RULE 3: components/ → services|features import 금지 [ARCH-002, ARCH-003]
+  // RULE 4: components/ → services|features import 금지 [ARCH-002, ARCH-003]
   // FIX: 데이터를 Props로 받도록 컴포넌트를 재설계하세요.
   // ──────────────────────────────────────────────────────────
   {
