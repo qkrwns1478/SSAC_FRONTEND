@@ -46,7 +46,8 @@ function parseMapping(content: string): ParseResult {
   const version = versionMatch ? (versionMatch[1] ?? '').trim() : '';
 
   const codes: string[] = [];
-  const codeRegex = /"([A-Z]+-\d+)":/g;
+  // prettier의 singleQuote 설정에 따라 작은따옴표로 포맷될 수 있으므로 양쪽 모두 허용
+  const codeRegex = /['"]([A-Z]+-\d+)['"]\s*:/g;
   let match: RegExpExecArray | null;
   while ((match = codeRegex.exec(content)) !== null) {
     const code = match[1];
