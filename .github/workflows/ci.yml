@@ -32,3 +32,24 @@ jobs:
           NEXT_PUBLIC_APP_NAME: SSAC Frontend
           NEXT_PUBLIC_APP_URL: http://localhost:3000
           NEXT_PUBLIC_BACKEND_URL: http://localhost:8080
+
+  error-mapping-validation:
+    name: ErrorCode Mapping Validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Contract 파일(api-contract/error-contract.yml)과
+      # FE 매핑 테이블(src/constants/errorMessages.ts)의 정합성을 검증합니다.
+      # 누락 코드 또는 유령 코드 발견 시 빌드가 실패합니다.
+      - name: ErrorCode 매핑 테이블 정합성 검증
+        run: npm run validate:error-mapping

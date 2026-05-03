@@ -49,6 +49,19 @@ npm run build 결과:      [ PASS / FAIL ]
 
 ---
 
+## ErrorCode 매핑 테이블 변경 체크리스트
+
+> `src/constants/errorMessages.ts` 또는 `api-contract/error-contract.yml`을 변경한 경우에만 작성합니다.
+> 해당 없으면 이 섹션을 삭제하세요.
+
+- [ ] Contract 파일(`api-contract/error-contract.yml`) 최신화 확인
+- [ ] 변경된 ErrorCode 매핑 테이블 업데이트 완료
+- [ ] 매핑 테이블 Contract 버전 주석 갱신 완료
+- [ ] `npm run validate:error-mapping` 검증 통과 확인
+- [ ] 변경된 ErrorCode 관련 UI 동작 확인 완료
+
+---
+
 ## 리뷰어 확인 사항 (인간)
 
 리뷰어는 구현 세부사항이 아니라 **의도가 올바르게 구현됐는지**를 검토합니다.
