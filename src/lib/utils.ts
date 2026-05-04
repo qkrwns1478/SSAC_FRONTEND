@@ -33,6 +33,15 @@ export function sleep(ms: number): Promise<void> {
 }
 
 /**
+ * Returns the current (or given) time as a KST ISO-like string without timezone suffix.
+ * e.g. "2026-05-04T22:57:08"
+ */
+export function toKSTISOString(date: Date = new Date()): string {
+  const kst = new Date(date.getTime() + 9 * 60 * 60 * 1000);
+  return kst.toISOString().slice(0, 19);
+}
+
+/**
  * Returns a human-readable relative time string in Korean.
  * e.g. "방금 전", "5분 전", "3시간 전", "2일 전"
  */

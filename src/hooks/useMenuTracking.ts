@@ -2,6 +2,7 @@
 
 import { useCallback } from 'react';
 import { usePathname } from 'next/navigation';
+import { toKSTISOString } from '@/lib/utils';
 
 const ENDPOINT = '/api/events/menu-click';
 
@@ -22,7 +23,7 @@ export function useMenuTracking() {
         eventType: 'MENU_CLICK' as const,
         menuId,
         menuName,
-        clickedAt: new Date().toISOString(),
+        clickedAt: toKSTISOString(),
         pageContext: pathname,
       };
 
