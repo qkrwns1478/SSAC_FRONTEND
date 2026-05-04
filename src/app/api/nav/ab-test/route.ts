@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers';
 
+// API-contract exemption: type narrowing of components['schemas']['AbTestGroupResponse'] (group: string → 'A' | 'B')
 export interface AbTestResponse {
   group: 'A' | 'B';
 }

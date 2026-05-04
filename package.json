@@ -23,7 +23,8 @@
     "prepare": "husky",
     "sync:api": "bash scripts/sync-api.sh",
     "sync:api:local": "SWAGGER_URL=http://$(ip route show default | awk '{print $3}'):8080/api-docs/swagger.json bash scripts/sync-api.sh",
-    "validate:error-mapping": "node --experimental-strip-types --no-warnings scripts/validateErrorMapping.ts"
+    "validate:error-mapping": "node --experimental-strip-types --no-warnings scripts/validateErrorMapping.ts",
+    "lint:type-contract": "node scripts/lintTypeContract.mjs"
   },
   "lint-staged": {
     "*.{ts,tsx,js,mjs,cjs}": [
