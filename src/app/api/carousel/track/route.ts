@@ -4,6 +4,7 @@
  */
 
 import { recordCarouselEvent, getCarouselStats } from '@/lib/carousel-store';
+import { toKSTISOString } from '@/lib/utils';
 import type { CarouselTrackEvent } from '@/types';
 
 export async function POST(request: Request): Promise<Response> {
@@ -35,7 +36,7 @@ export async function POST(request: Request): Promise<Response> {
     eventType: body.eventType,
     stayDurationMs: body.stayDurationMs,
     sessionId: body.sessionId,
-    timestamp: body.timestamp ?? new Date().toISOString(),
+    timestamp: body.timestamp ?? toKSTISOString(),
   });
 
   return Response.json({ success: true }, { status: 201 });

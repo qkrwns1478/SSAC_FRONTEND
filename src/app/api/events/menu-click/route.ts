@@ -1,4 +1,5 @@
 import { after } from 'next/server';
+import { toKSTISOString } from '@/lib/utils';
 import { cookies } from 'next/headers';
 import type { NextRequest } from 'next/server';
 
@@ -46,7 +47,7 @@ export async function POST(request: NextRequest): Promise<Response> {
     menuName: body.menuName ?? '',
     userId,
     guestId: userId ? null : guestId,
-    clickedAt: body.clickedAt ?? new Date().toISOString(),
+    clickedAt: body.clickedAt ?? toKSTISOString(),
     pageContext: body.pageContext ?? '',
   };
 

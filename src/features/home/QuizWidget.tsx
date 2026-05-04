@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { cn } from '@/lib/utils';
+import { cn, toKSTISOString } from '@/lib/utils';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { getNextRound } from '@/data/quiz-data';
 import type { QuizItem, QuizAttempt, QuizSession } from '@/types';
@@ -140,7 +140,7 @@ export function QuizWidget({ pool }: QuizWidgetProps) {
             quizId: current.id,
             selectedIndex: optionIdx,
             isCorrect: data.isCorrect,
-            answeredAt: new Date().toISOString(),
+            answeredAt: toKSTISOString(),
           },
         ]);
       } catch {
@@ -150,7 +150,7 @@ export function QuizWidget({ pool }: QuizWidgetProps) {
             quizId: current.id,
             selectedIndex: optionIdx,
             isCorrect: optionIdx === current.correctIndex,
-            answeredAt: new Date().toISOString(),
+            answeredAt: toKSTISOString(),
           },
         ]);
       } finally {
@@ -166,7 +166,7 @@ export function QuizWidget({ pool }: QuizWidgetProps) {
       const score = attempts.filter((a) => a.isCorrect).length;
       const session: QuizSession = {
         sessionId: `${Date.now()}`,
-        date: new Date().toISOString(),
+        date: toKSTISOString(),
         attempts,
         score,
         total: currentItems.length,

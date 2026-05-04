@@ -1,3 +1,4 @@
+import { toKSTISOString } from '@/lib/utils';
 import type { QuizHistoryItem } from '@/types';
 
 const CATEGORIES = ['경제', '역사', '과학', '문화', '스포츠', '시사', '기술', '예술'];
@@ -30,6 +31,6 @@ export const ALL_QUIZ_HISTORY: QuizHistoryItem[] = Array.from({ length: 100 }, (
     category: CATEGORIES[i % CATEGORIES.length] as string,
     score: 55 + ((i * 7) % 45),
     isCorrect: i % 3 !== 2,
-    answeredAt: date.toISOString(),
+    answeredAt: toKSTISOString(date),
   };
 });

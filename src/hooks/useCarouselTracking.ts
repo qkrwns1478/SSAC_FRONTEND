@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef } from 'react';
+import { toKSTISOString } from '@/lib/utils';
 
 interface TrackPayload {
   itemId: number;
@@ -35,7 +36,7 @@ export function useCarouselTracking() {
         body: JSON.stringify({
           ...payload,
           sessionId: sessionIdRef.current,
-          timestamp: new Date().toISOString(),
+          timestamp: toKSTISOString(),
         }),
       });
     } catch {
