@@ -12,6 +12,7 @@
 | -------------- | ------------------------------------- | ---------------------------------------- | ------------------- |
 | SC 관심사 점검 | docs/agent-protocols/sc-harness.md    | SC가 포함된 작업 지시를 받았을 때        | 자동 (구현 전 필수) |
 | 신규 기능 개발 | docs/agent-protocols/new-feature.md   | 새로운 컴포넌트/페이지/기능 추가 요청 시 | 자동 (구현 전 필수) |
+| 테스트 작성    | docs/agent-protocols/testing.md       | 신규 컴포넌트/훅/API 연동 구현 완료 시   | 자동 (구현 후 필수) |
 | 하네스 감사    | docs/agent-protocols/harness-audit.md | 하네스 점검 요청 시 / 주기적 실행        | 수동 또는 주기적    |
 | 자가 진단      | docs/agent-protocols/self-diagnose.md | 에러 발생 / 구현 완료 후 검증 시         | 자동 (구현 후 필수) |
 | ADR 생성       | docs/agent-protocols/adr-create.md    | 기술적 의사결정이 발생했을 때            | 수동 (결정 시점)    |
@@ -30,6 +31,13 @@
 
 - 새로운 페이지, 컴포넌트, API 연동, 기능 추가
 - "만들어줘", "추가해줘", "구현해줘"
+
+[testing.md] 다음 상황에서 실행
+
+- 신규 컴포넌트, 페이지, 훅 구현 완료 시
+- 신규 API 연동 코드 구현 완료 시
+- 사용자가 "테스트 작성", "test", "검증" 언급 시
+- quality.md TD-001 관련 작업 시
 
 [self-diagnose.md] 다음 상황에서 실행
 
@@ -57,9 +65,10 @@
 
 1순위 sc-harness.md → SC 관심사 점검 (구현 전 게이트)
 2순위 new-feature.md → 신규 기능 개발 프로토콜
-3순위 self-diagnose.md → 구현 후 자가 진단
-4순위 adr-create.md → 의사결정 기록
-5순위 harness-audit.md → 전체 하네스 감사
+3순위 testing.md → 테스트 작성 프로토콜
+4순위 self-diagnose.md → 구현 후 자가 진단
+5순위 adr-create.md → 의사결정 기록
+6순위 harness-audit.md → 전체 하네스 감사
 
 > 1순위 프로토콜 실행 결과가 중단(STOP)인 경우 이후 프로토콜은 실행되지 않는다.
 
@@ -75,6 +84,8 @@
 → YES : new-feature.md 실행
 □ 이 작업에서 기술적 의사결정이 발생했는가?
 → YES : adr-create.md 실행
+□ 신규 컴포넌트/훅/API 연동 구현이 완료되었는가?
+→ YES : testing.md 실행
 □ 구현이 완료되었는가?
 → YES : self-diagnose.md 실행
 
