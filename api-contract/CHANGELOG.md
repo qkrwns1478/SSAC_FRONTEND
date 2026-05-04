@@ -1,3 +1,11 @@
+## 2026-05-04 18:23 동기화
+
+**추가된 엔드포인트:**
+  + GET /api/auth/nickname/check
+  + POST /api/auth/register
+  + POST /api/auth/terms
+
+
 ## 2026-04-29 20:47 동기화
 
 **추가된 엔드포인트:**
