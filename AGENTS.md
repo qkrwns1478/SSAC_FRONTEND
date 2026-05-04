@@ -97,6 +97,16 @@ npm run sync:api
 | **스펙 외 엔드포인트 금지** | `swagger.json`의 `paths`에 없는 엔드포인트 호출 코드 작성 금지                 |
 | **불일치 시 행동**          | 실제 동작과 Swagger가 다를 경우 임의 수정 금지 — 백엔드 팀에 이슈 제기 후 대기 |
 
+### 타입 정의 위치 규칙
+
+| 타입 종류           | 위치                                | 수동 작성 허용 여부 |
+| ------------------- | ----------------------------------- | ------------------- |
+| API 요청/응답 타입  | api-contract/generated/api-types.ts | ❌ 금지 (자동 생성) |
+| API 에러 응답 타입  | api-contract/generated/api-types.ts | ❌ 금지 (자동 생성) |
+| UI 전용 타입        | src/types/index.ts                  | ✅ 허용             |
+| 컴포넌트 Props 타입 | 해당 컴포넌트 파일 내부             | ✅ 허용             |
+| 전역 유틸리티 타입  | src/types/utils.ts                  | ✅ 허용             |
+
 ```ts
 // ✅ 올바른 import
 import type { paths, components } from '@/api-contract/generated/api-types';

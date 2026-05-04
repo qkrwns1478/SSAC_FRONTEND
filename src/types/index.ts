@@ -1,13 +1,37 @@
+import type { components } from '@/api-contract/generated/api-types';
+
 // ============================================================
-// Common API Types
+// Migrated API Types
+// 수동 정의 제거 → api-contract/generated/api-types.ts 스키마 참조
 // ============================================================
 
+/** Migrated: components['schemas']['ProfileResponse'] */
+export type UserProfile = Required<components['schemas']['ProfileResponse']>;
+
+/** Migrated: components['schemas']['PeriodStatResponse'] */
+export type PeriodStat = Required<components['schemas']['PeriodStatResponse']>;
+
+/** Migrated: components['schemas']['UserStatsResponse'] */
+export type QuizStats = Required<
+  Omit<components['schemas']['UserStatsResponse'], 'periodStats'>
+> & {
+  periodStats: PeriodStat[];
+};
+
+// ============================================================
+// ⚠️ API Types — Pending Migration
+// api-contract/generated/api-types.ts에 해당 스키마 없음
+// BE 팀에 Contract 추가 요청 후 api-types.ts 재생성 시 이전 예정
+// ============================================================
+
+// ⚠️ API type: BE Contract 미확인 — 수동 작성 금지 대상
 export interface ApiResponse<T> {
   data: T;
   status: number;
   message: string;
 }
 
+// ⚠️ API type: BE Contract 미확인 — 수동 작성 금지 대상
 export interface PaginatedResponse<T> {
   data: T[];
   total: number;
@@ -16,11 +40,13 @@ export interface PaginatedResponse<T> {
   totalPages: number;
 }
 
+// ⚠️ API type: BE Contract 미확인 — ErrorResponse.errors 하위 타입
 export interface FieldError {
   field: string;
   message: string;
 }
 
+// ⚠️ API 에러 응답 타입: api-types.ts의 ApiResponseError로 대체 검토 필요
 export interface ErrorResponse {
   status: number;
   code: string;
@@ -29,6 +55,7 @@ export interface ErrorResponse {
   timestamp: string;
 }
 
+// ⚠️ API 에러 타입: api-types.ts의 ApiResponseError로 대체 검토 필요
 export interface ApiError {
   status: number;
   code?: string;
@@ -37,9 +64,11 @@ export interface ApiError {
 }
 
 // ============================================================
-// Example Domain Types (JSONPlaceholder)
+// ⚠️ Example Domain Types (JSONPlaceholder)
+// BE Contract 미확인 — 실제 API Contract 확인 필요
 // ============================================================
 
+// ⚠️ API type: JSONPlaceholder 예시 타입 — 실제 API Contract 확인 필요
 export interface Post {
   id: number;
   userId: number;
@@ -47,6 +76,7 @@ export interface Post {
   body: string;
 }
 
+// ⚠️ API type: JSONPlaceholder 예시 타입 — 실제 API Contract 확인 필요
 export interface User {
   id: number;
   name: string;
@@ -55,9 +85,11 @@ export interface User {
 }
 
 // ============================================================
-// Home Domain Types
+// ⚠️ Home Domain Types
+// api-contract/generated/api-types.ts에 없음 — BE 팀 확인 필요
 // ============================================================
 
+// ⚠️ API type: api-types.ts에 없음 — BE 팀 확인 필요
 export interface CarouselItem {
   id: number;
   title: string;
@@ -72,6 +104,7 @@ export interface CarouselItem {
   linkType: 'internal' | 'external';
 }
 
+// ⚠️ API type: api-types.ts에 없음 — BE 팀 확인 필요
 export interface CarouselTrackEvent {
   itemId: number;
   position: number;
@@ -81,6 +114,7 @@ export interface CarouselTrackEvent {
   timestamp: string;
 }
 
+// ⚠️ API type: api-types.ts에 없음 — BE 팀 확인 필요
 export interface CarouselItemStats {
   itemId: number;
   impressions: number;
@@ -91,6 +125,7 @@ export interface CarouselItemStats {
   avgStayMs: number;
 }
 
+// ⚠️ API type: api-types.ts에 없음 — BE 팀 확인 필요
 export interface QuizItem {
   id: number;
   question: string;
@@ -101,6 +136,7 @@ export interface QuizItem {
   difficulty: 'easy' | 'medium' | 'hard';
 }
 
+// ⚠️ API type: api-types.ts에 없음 — BE 팀 확인 필요
 export interface QuizAttempt {
   quizId: number;
   selectedIndex: number;
@@ -108,6 +144,7 @@ export interface QuizAttempt {
   answeredAt: string;
 }
 
+// ⚠️ API type: api-types.ts에 없음 — BE 팀 확인 필요
 export interface QuizSession {
   sessionId: string;
   date: string;
@@ -116,12 +153,14 @@ export interface QuizSession {
   total: number;
 }
 
+// ⚠️ API type: api-types.ts에 없음 — BE 팀 확인 필요
 export interface ContentItem {
   id: number;
   title: string;
   body: string;
 }
 
+// ⚠️ API type: api-types.ts에 없음 — BE 팀 확인 필요
 export interface HomeData {
   carousel: CarouselItem[];
   quiz: QuizItem[];
@@ -129,43 +168,11 @@ export interface HomeData {
 }
 
 // ============================================================
-// Mypage Domain Types
+// ⚠️ Mypage Domain Types
+// QuizHistoryItem: QuizAttemptSummaryResponse와 필드 불일치 — BE 팀 확인 필요
 // ============================================================
 
-/** GET /api/v1/users/me → data */
-export interface UserProfile {
-  id: number;
-  email: string;
-  nickname: string;
-  createdAt: string;
-}
-
-export interface PeriodStat {
-  label: string;
-  attemptCount: number;
-  totalScore: number;
-  averageScore: number;
-  accuracyRate: number;
-}
-
-/** GET /api/v1/quiz-attempts/stats → data */
-export interface QuizStats {
-  totalScore: number;
-  totalAttempts: number;
-  averageScore: number;
-  totalCorrect: number;
-  totalQuestions: number;
-  accuracyRate: number;
-  periodStats: PeriodStat[];
-}
-
-/** Standard backend envelope: { success, data, message } */
-export interface BackendResponse<T> {
-  success: boolean;
-  data: T;
-  message: string;
-}
-
+// ⚠️ API type: QuizAttemptSummaryResponse와 필드 불일치 — BE 팀 확인 필요
 export interface QuizHistoryItem {
   id: number;
   quizTitle: string;
@@ -175,6 +182,7 @@ export interface QuizHistoryItem {
   answeredAt: string;
 }
 
+// ⚠️ API type: api-types.ts에 없음 — BE 팀 확인 필요
 export interface QuizHistoryPage {
   items: QuizHistoryItem[];
   total: number;
@@ -187,13 +195,18 @@ export interface QuizHistoryPage {
 // UI / Component Types
 // ============================================================
 
+// UI-only type: not derived from API contract
 export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
+
+// UI-only type: not derived from API contract
 export type ButtonSize = 'sm' | 'md' | 'lg';
 
 // ============================================================
-// Content Domain Types
+// ⚠️ Content Domain Types
+// api-contract/generated/api-types.ts에 없음 — BE 팀 확인 필요
 // ============================================================
 
+// ⚠️ API type: api-types.ts에 없음 — BE 팀 확인 필요
 export interface PopularContent {
   id: number;
   title: string;
@@ -201,23 +214,27 @@ export interface PopularContent {
   likeCount: number;
 }
 
+// ⚠️ API type: api-types.ts에 없음 — BE 팀 확인 필요
 export interface PopularContentResponse {
   items: PopularContent[];
   aggregationLabel: string;
 }
 
+// ⚠️ API type: api-types.ts에 없음 — BE 팀 확인 필요
 export interface NewContent {
   id: number;
   title: string;
   registeredAt: string;
 }
 
+// ⚠️ API type: api-types.ts에 없음 — BE 팀 확인 필요
 export interface RecommendedContent {
   id: number;
   title: string;
   summary: string;
 }
 
+// ⚠️ API type: api-types.ts에 없음 — BE 팀 확인 필요
 export interface ContentDetail {
   id: number;
   title: string;
@@ -227,9 +244,11 @@ export interface ContentDetail {
 }
 
 // ============================================================
-// Search Domain Types
+// ⚠️ Search Domain Types
+// api-contract/generated/api-types.ts에 없음 — BE 팀 확인 필요
 // ============================================================
 
+// ⚠️ API type: api-types.ts에 없음 — BE 팀 확인 필요
 export interface SearchResult {
   id: number;
   title: string;
@@ -238,11 +257,13 @@ export interface SearchResult {
   relevanceScore: number;
 }
 
+// ⚠️ API type: api-types.ts에 없음 — BE 팀 확인 필요
 export interface SearchSuggestion {
   keyword: string;
   count: number;
 }
 
+// ⚠️ API type: api-types.ts에 없음 — BE 팀 확인 필요
 export interface SearchResponse {
   results: SearchResult[];
   total: number;

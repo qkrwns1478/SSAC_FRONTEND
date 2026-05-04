@@ -17,13 +17,28 @@ API 엔드포인트: <예: "GET /users">
 
 ## 실행 단계
 
-### STEP 1 — 타입 정의 (`src/types/index.ts`)
+### STEP 1 — 타입 정의 규칙 확인 (AGENTS.md API 계약 규칙 우선 적용)
+
+**1-1.** `api-contract/generated/api-types.ts`에 필요한 타입이 존재하는지 확인
+
+- 존재하는 경우 : `api-types.ts`에서 import하여 사용 (수동 타입 작성 금지)
+- 존재하지 않는 경우 : 아래 1-2 진행
+
+**1-2.** `api-contract/generated/api-types.ts`에 타입이 없는 경우
+
+- BE Contract 파일 확인 후 BE 팀에 타입 추가 요청
+- BE 확인 전까지 작업을 중단하고 보고
+
+**1-3.** API와 무관한 UI 전용 타입인 경우에만
+
+- `src/types/index.ts`에 타입 추가 허용
+- 단, 해당 타입이 UI 전용임을 주석으로 명시
 
 ```typescript
-// 추가할 타입 패턴
-export interface <DomainName> {
-  id: number;
-  // API 응답 필드 추가
+// UI-only type: not derived from API contract
+interface DropdownOption {
+  label: string;
+  value: string;
 }
 ```
 
@@ -130,6 +145,37 @@ npm run build      # 빌드 성공
 
 모두 통과 → PR 생성 가능
 실패 → 오류 메시지의 `[FIX]` 지시 따라 수정 후 재실행
+
+---
+
+## 타입 정의 위치 규칙
+
+| 타입 종류           | 위치                                | 수동 작성 허용 여부 |
+| ------------------- | ----------------------------------- | ------------------- |
+| API 요청/응답 타입  | api-contract/generated/api-types.ts | ❌ 금지 (자동 생성) |
+| API 에러 응답 타입  | api-contract/generated/api-types.ts | ❌ 금지 (자동 생성) |
+| UI 전용 타입        | src/types/index.ts                  | ✅ 허용             |
+| 컴포넌트 Props 타입 | 해당 컴포넌트 파일 내부             | ✅ 허용             |
+| 전역 유틸리티 타입  | src/types/utils.ts                  | ✅ 허용             |
+
+---
+
+## 타입 작성 전 체크리스트
+
+타입을 작성하기 전 반드시 아래 질문에 답하라:
+
+□ 이 타입이 API 요청/응답과 관련이 있는가?
+→ YES : `api-contract/generated/api-types.ts` 확인 후 import
+→ YES이나 타입 없음 : 작업 중단 후 BE 팀에 보고
+
+□ 이 타입이 UI 전용인가? (API와 완전히 무관한가?)
+→ YES : `src/types/index.ts`에 추가 허용
+단, `// UI-only type` 주석 필수
+
+□ 이 타입이 특정 컴포넌트에서만 사용되는가?
+→ YES : 해당 컴포넌트 파일 내부에 정의
+
+위 체크리스트를 건너뛰고 타입을 작성하는 것은 금지된다.
 
 ---
 
