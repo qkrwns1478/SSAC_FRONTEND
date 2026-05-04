@@ -35,7 +35,9 @@
 
 ```
 1. any가 사용된 파일:라인 찾기
-2. 해당 값의 실제 형태 파악 (API 응답이면 src/types/index.ts 확인)
+2. 해당 값의 실제 형태 파악:
+   - API 응답 타입이면 → api-contract/generated/api-types.ts 확인 후 import (AGENTS.md 규칙 우선)
+   - UI 전용 타입이면 → src/types/index.ts 확인
 3. 정확한 타입이 있으면 → 교체
 4. 외부 라이브러리 반환값이면 → 해당 라이브러리 타입 import
 5. 진짜 알 수 없으면 → unknown + 타입 가드로 좁히기
@@ -89,7 +91,10 @@
    - "Property does not exist" → 타입 정의 확인/업데이트
    - "Argument of type X is not assignable to Y" → 타입 좁히기 또는 타입 가드
    - "Object is possibly undefined" → optional chaining 또는 null check 추가
-3. src/types/index.ts 에 타입 추가가 필요한 경우 추가
+3. 타입 추가가 필요한 경우 — AGENTS.md 타입 정의 위치 규칙 준수:
+   - API 요청/응답 타입 → api-contract/generated/api-types.ts 에서 import (수동 작성 금지)
+   - API 타입이 api-types.ts에 없음 → 작업 중단 후 BE 팀에 Contract 추가 요청
+   - UI 전용 타입 → src/types/index.ts 에 추가 허용 (단, // UI-only type 주석 필수)
 ```
 
 ---
