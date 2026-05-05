@@ -8,6 +8,8 @@ interface NaverCallbackResponse {
     tokenType: string;
     /** 비회원 퀴즈 기록 병합 완료 여부 (BE가 포함한 경우) */
     guestQuizMerged?: boolean;
+    /** 신규 사용자 여부 — true이면 FE가 약관 동의 페이지로 이동 */
+    isNewUser?: boolean;
   };
   message: string;
 }
@@ -16,6 +18,12 @@ interface NaverCallbackResponse {
  * GET /api/auth/naver/callback?code=...&state=...
  * 네이버 OAuth code/state를 BE에 전달하고 accessToken을 httpOnly 쿠키에 저장하는 BFF.
  * refreshToken은 BE가 Set-Cookie로 직접 설정하므로 헤더를 그대로 전달한다.
+ *
+ * ⚠️ Cookie 전달 정책:
+ * BE는 /api/v1/auth/naver/login 호출 시 생성한 세션(JSESSIONID 등)으로 OAuth state를 검증한다.
+ * BFF 서버→서버 호출에 브라우저 Cookie를 그대로 전달하지 않으면
+ * state 검증이 실패해 NAVER_AUTH_FAILED가 발생한다 (시크릿 모드에서 특히 재현됨).
+ * 따라서 브라우저 요청의 Cookie 헤더 전체를 BE에 포워딩한다.
  */
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -36,11 +44,15 @@ export async function GET(request: NextRequest) {
     beUrl.searchParams.set('code', code);
     beUrl.searchParams.set('state', state);
 
-    // guestId 쿠키 전달 (비회원 데이터 마이그레이션 용도, Swagger 명세 기준)
-    const guestId = request.cookies.get('guestId')?.value;
+    // 브라우저 Cookie 헤더 전체를 BE에 포워딩
+    // - JSESSIONID: BE의 OAuth state 검증에 필수 (없으면 state mismatch → 인증 실패)
+    // - guestId: 비회원 데이터 마이그레이션
+    // - localhost 환경에서 Chrome은 포트 무관하게 쿠키를 공유하므로
+    //   backendUrl:PORT 에서 설정한 JSESSIONID가 BFF 요청에도 포함된다.
+    const incomingCookieHeader = request.headers.get('cookie') ?? '';
 
     const beResponse = await fetch(beUrl.toString(), {
-      headers: guestId ? { Cookie: `guestId=${guestId}` } : {},
+      headers: incomingCookieHeader ? { Cookie: incomingCookieHeader } : {},
     });
 
     if (!beResponse.ok) {
@@ -54,8 +66,9 @@ export async function GET(request: NextRequest) {
     const body = (await beResponse.json()) as NaverCallbackResponse;
     const accessToken = body?.data?.accessToken;
     const guestQuizMerged = body?.data?.guestQuizMerged ?? false;
+    const isNewUser = body?.data?.isNewUser ?? false;
 
-    const res = NextResponse.json({ success: true, guestQuizMerged });
+    const res = NextResponse.json({ success: true, guestQuizMerged, isNewUser });
 
     // LoginResponse 바디의 accessToken을 httpOnly 쿠키로 저장
     if (accessToken) {

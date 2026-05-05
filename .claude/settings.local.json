@@ -103,7 +103,19 @@
       "Bash(src/constants/errorMessages.ts)",
       "Bash(scripts/validateErrorMapping.ts)",
       "Bash(validate:error-mapping)",
-      "Bash(.github/workflows/ci.yml)"
+      "Bash(.github/workflows/ci.yml)",
+      "Bash(src/services/signup.ts)",
+      "Bash(src/features/signup/)",
+      "Bash(src/app/signup/terms/page.tsx)",
+      "Bash(src/app/signup/nickname/page.tsx)",
+      "Bash(curl -s --connect-timeout 3 http://localhost:8080/actuator/health)",
+      "Bash(curl -s --connect-timeout 3 http://localhost:8080)",
+      "Bash(echo \"EXIT:$?\")",
+      "Bash(curl -v --connect-timeout 3 http://localhost:8080/api/v1/auth/naver/login)",
+      "Bash(callback/page.tsx)",
+      "Bash(error_code)",
+      "Bash(172.17.96.1:8080)",
+      "Bash(localhost:3000)"
     ]
   }
 }

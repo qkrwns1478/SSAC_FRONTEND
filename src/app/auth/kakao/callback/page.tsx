@@ -23,6 +23,8 @@ function KakaoCallbackContent() {
 
     const token = searchParams.get('token');
     const error = searchParams.get('error');
+    // BE가 신규 사용자임을 알릴 때 추가하는 파라미터
+    const isNewUser = searchParams.get('isNewUser') === 'true';
 
     if (error) {
       router.replace('/login?error=KAKAO_AUTH_CANCEL');
@@ -48,7 +50,12 @@ function KakaoCallbackContent() {
         }
         // 클라이언트측 비회원 식별 정보 제거 (BFF 쿠키 삭제와 이중 보장)
         document.cookie = 'guestId=; Max-Age=0; path=/';
-        // 로그인 성공: 버튼 클릭 시 저장해둔 redirectTo로 이동
+        // 신규 사용자: 약관 동의 페이지로 이동 (뒤로가기 방지)
+        if (isNewUser) {
+          router.replace('/signup/terms');
+          return;
+        }
+        // 기존 사용자: 로그인 전 페이지로 이동
         const redirectTo = sessionStorage.getItem('kakaoRedirectTo') ?? '/';
         sessionStorage.removeItem('kakaoRedirectTo');
         router.replace(redirectTo);

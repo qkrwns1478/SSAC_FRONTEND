@@ -23,16 +23,63 @@ function NaverCallbackContent() {
 
     const code = searchParams.get('code');
     const state = searchParams.get('state');
-    const error = searchParams.get('error');
+    // Naver가 에러 시 전달하는 파라미터 ('error' 또는 'error_code')
+    const error = searchParams.get('error') ?? searchParams.get('error_code');
+    // BE OAuth 처리 실패 시 전달하는 파라미터 ('loginError')
+    const loginError = searchParams.get('loginError');
+    // BE가 신규 사용자임을 알릴 때 추가하는 파라미터
+    const isNewUserParam = searchParams.get('isNewUser');
+    const tempToken = searchParams.get('tempToken');
+    const provider = searchParams.get('provider');
 
-    // 사용자가 네이버 인증 페이지에서 취소한 경우
+    // Case 1: 사용자가 네이버 인증 페이지에서 취소한 경우
     if (error) {
       router.replace('/login?error=NAVER_AUTH_CANCEL');
       return;
     }
 
-    if (!code || !state) {
+    // Case 2: BE OAuth 처리 실패 (state 불일치 등)
+    if (loginError) {
       router.replace('/login?error=NAVER_AUTH_FAILED');
+      return;
+    }
+
+    if (!code || !state) {
+      // Case 3: 신규 사용자 — BE가 tempToken과 함께 리다이렉트
+      if (isNewUserParam === 'true' && tempToken) {
+        sessionStorage.setItem('signupTempToken', tempToken);
+        if (provider) sessionStorage.setItem('signupProvider', provider);
+        document.cookie = 'guestId=; Max-Age=0; path=/';
+        router.replace('/signup/terms');
+        return;
+      }
+
+      // Case 4: 기존 사용자 — BE가 accessToken 쿠키를 설정한 뒤 리다이렉트
+      if (isNewUserParam === 'false') {
+        document.cookie = 'guestId=; Max-Age=0; path=/';
+        const redirectTo = sessionStorage.getItem('naverRedirectTo') ?? '/';
+        sessionStorage.removeItem('naverRedirectTo');
+        router.replace(redirectTo);
+        router.refresh();
+        return;
+      }
+
+      // Case 5: 엣지케이스 — reissue로 인증 상태 확인
+      fetch('/api/v1/auth/reissue', { method: 'POST' })
+        .then((res) => {
+          if (res.ok) {
+            document.cookie = 'guestId=; Max-Age=0; path=/';
+            const redirectTo = sessionStorage.getItem('naverRedirectTo') ?? '/';
+            sessionStorage.removeItem('naverRedirectTo');
+            router.replace(redirectTo);
+            router.refresh();
+          } else {
+            router.replace('/login?error=NAVER_AUTH_FAILED');
+          }
+        })
+        .catch(() => {
+          router.replace('/login?error=NAVER_AUTH_FAILED');
+        });
       return;
     }
 
@@ -49,14 +96,22 @@ function NaverCallbackContent() {
           router.replace(`/login?error=${data.errorCode ?? 'SERVER_ERROR'}`);
           return;
         }
+        const data = (await res.json().catch(() => ({}))) as {
+          guestQuizMerged?: boolean;
+          isNewUser?: boolean;
+        };
         // 비회원 퀴즈 기록 병합 완료 신호 확인 → sessionStorage에 저장 후 PostLoginToast가 표시
-        const data = (await res.json().catch(() => ({}))) as { guestQuizMerged?: boolean };
         if (data.guestQuizMerged) {
           sessionStorage.setItem('quizMergeNotice', '1');
         }
         // 클라이언트측 비회원 식별 정보 제거 (BFF 쿠키 삭제와 이중 보장)
         document.cookie = 'guestId=; Max-Age=0; path=/';
-        // 로그인 성공: 버튼 클릭 시 저장해둔 redirectTo로 이동
+        // 신규 사용자: 약관 동의 페이지로 이동 (뒤로가기 방지)
+        if (data.isNewUser) {
+          router.replace('/signup/terms');
+          return;
+        }
+        // 기존 사용자: 로그인 전 페이지로 이동
         const redirectTo = sessionStorage.getItem('naverRedirectTo') ?? '/';
         sessionStorage.removeItem('naverRedirectTo');
         router.replace(redirectTo);

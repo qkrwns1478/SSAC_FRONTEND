@@ -27,6 +27,10 @@ export const ERROR_MESSAGES: Record<string, string> = {
   // 공통
   'COMMON-001': '입력값을 확인해주세요.',
   'SERVER-001': '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+
+  // 회원가입
+  'TERMS-001': '필수 약관에 모두 동의해주세요.',
+  'TERMS-002': '이미 회원가입이 완료된 계정입니다.',
 };
 
 const DEFAULT_ERROR_MESSAGE = '오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
