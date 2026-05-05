@@ -192,6 +192,29 @@ export interface QuizHistoryPage {
 }
 
 // ============================================================
+// ⚠️ Signup Domain Types
+// api-contract/generated/api-types.ts에 없음 — BE 팀 swagger 추가 후 이전 예정
+// ============================================================
+
+// ⚠️ API type: api-types.ts에 없음 — BE 팀 확인 필요 (POST /api/v1/signup/terms)
+export interface TermsAgreementRequest {
+  agreeService: boolean;
+  agreePrivacy: boolean;
+  agreeAge: boolean;
+  agreeMarketing: boolean;
+}
+
+// ⚠️ API type: api-types.ts에 없음 — BE 팀 확인 필요 (GET /api/v1/signup/nickname/check)
+export interface NicknameCheckResponse {
+  available: boolean;
+}
+
+// ⚠️ API type: api-types.ts에 없음 — BE 팀 확인 필요 (POST /api/v1/signup/complete)
+export interface SignupCompleteRequest {
+  nickname: string;
+}
+
+// ============================================================
 // UI / Component Types
 // ============================================================
 

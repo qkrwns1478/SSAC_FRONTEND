@@ -76,3 +76,13 @@ errors:
     message: '잘못된 요청입니다.'
     httpStatus: 400
     description: '요청 파라미터 또는 바디 유효성 검사 실패'
+
+  TERMS-001:
+    message: '필수 약관에 동의하지 않았습니다.'
+    httpStatus: 400
+    description: '서비스 이용약관·개인정보 처리방침·연령 확인 중 하나 이상 미동의'
+
+  TERMS-002:
+    message: '이미 약관에 동의한 사용자입니다.'
+    httpStatus: 409
+    description: '소셜 로그인 재시도 등으로 이미 약관 동의가 완료된 사용자가 재접근'

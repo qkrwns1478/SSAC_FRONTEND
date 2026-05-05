@@ -1,4 +1,4 @@
-// Contract version: 1.0.0 / updatedAt: 2026-05-03
+// Contract version: 1.0.0 / updatedAt: 2026-05-04
 // 이 파일은 api-contract/error-contract.yml 기준으로 작성합니다.
 // ErrorCode 추가/변경/삭제 시 반드시 Contract 파일을 먼저 확인하세요.
 // 검증: npm run validate:error-mapping
@@ -17,4 +17,6 @@ export const ERROR_MESSAGES: Record<string, string> = {
   'NEWS-001': '존재하지 않는 뉴스입니다.',
   'COMMON-001': '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
   'COMMON-002': '요청 정보를 확인해주세요.',
+  'TERMS-001': '필수 약관에 모두 동의해주세요.',
+  'TERMS-002': '이미 회원가입이 완료된 계정입니다.',
 };
