@@ -22,12 +22,23 @@ function KakaoCallbackContent() {
     calledRef.current = true;
 
     const token = searchParams.get('token');
+    const tempToken = searchParams.get('tempToken');
+    const provider = searchParams.get('provider');
     const error = searchParams.get('error');
     // BE가 신규 사용자임을 알릴 때 추가하는 파라미터
     const isNewUser = searchParams.get('isNewUser') === 'true';
 
     if (error) {
       router.replace('/login?error=KAKAO_AUTH_CANCEL');
+      return;
+    }
+
+    // 신규 사용자: BE가 tempToken과 함께 리다이렉트 — BFF 호출 없이 바로 회원가입 플로우 진입
+    if (isNewUser && tempToken) {
+      sessionStorage.setItem('signupTempToken', tempToken);
+      if (provider) sessionStorage.setItem('signupProvider', provider);
+      document.cookie = 'guestId=; Max-Age=0; path=/';
+      router.replace('/signup/terms');
       return;
     }
 
@@ -50,11 +61,6 @@ function KakaoCallbackContent() {
         }
         // 클라이언트측 비회원 식별 정보 제거 (BFF 쿠키 삭제와 이중 보장)
         document.cookie = 'guestId=; Max-Age=0; path=/';
-        // 신규 사용자: 약관 동의 페이지로 이동 (뒤로가기 방지)
-        if (isNewUser) {
-          router.replace('/signup/terms');
-          return;
-        }
         // 기존 사용자: 로그인 전 페이지로 이동
         const redirectTo = sessionStorage.getItem('kakaoRedirectTo') ?? '/';
         sessionStorage.removeItem('kakaoRedirectTo');
