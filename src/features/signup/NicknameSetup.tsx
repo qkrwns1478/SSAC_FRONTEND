@@ -39,8 +39,8 @@ export function NicknameSetup() {
       }
       setCheckState('checking');
       try {
-        const { available } = await signupService.checkNickname(trimmed);
-        setCheckState(available ? 'available' : 'unavailable');
+        const { isAvailable } = await signupService.checkNickname(trimmed);
+        setCheckState(isAvailable ? 'available' : 'unavailable');
       } catch {
         setCheckState('idle');
       }
@@ -64,8 +64,8 @@ export function NicknameSetup() {
       sessionStorage.removeItem('signupTempToken');
       sessionStorage.removeItem('signupProvider');
       router.replace('/');
-    } catch {
-      // apiClient가 USER-002/USER-003 toast 처리
+    } catch (err) {
+      console.error('[NicknameSetup] completeSignup 실패:', err);
       setCheckState('idle');
     } finally {
       setIsSubmitting(false);
@@ -90,7 +90,7 @@ export function NicknameSetup() {
           aria-describedby="nickname-helper"
           aria-invalid={hasError}
           className={cn(
-            'h-11 w-full rounded-lg border px-3 text-sm outline-none transition-colors',
+            'h-11 w-full rounded-lg border px-3 text-sm text-gray-900 outline-none transition-colors',
             'focus:ring-2 focus:ring-offset-0',
             checkState === 'available' &&
               'border-green-500 focus:border-green-500 focus:ring-green-200',

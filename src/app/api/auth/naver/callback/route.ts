@@ -8,8 +8,6 @@ interface NaverCallbackResponse {
     tokenType: string;
     /** 비회원 퀴즈 기록 병합 완료 여부 (BE가 포함한 경우) */
     guestQuizMerged?: boolean;
-    /** 신규 사용자 여부 — true이면 FE가 약관 동의 페이지로 이동 */
-    isNewUser?: boolean;
   };
   message: string;
 }
@@ -51,9 +49,30 @@ export async function GET(request: NextRequest) {
     //   backendUrl:PORT 에서 설정한 JSESSIONID가 BFF 요청에도 포함된다.
     const incomingCookieHeader = request.headers.get('cookie') ?? '';
 
+    // BE는 302 리다이렉트로 응답하므로 자동 추적을 막고 Location 헤더를 직접 파싱한다.
     const beResponse = await fetch(beUrl.toString(), {
       headers: incomingCookieHeader ? { Cookie: incomingCookieHeader } : {},
+      redirect: 'manual',
     });
+
+    // 302 리다이렉트: Location 헤더에서 isNewUser / tempToken 추출
+    if (beResponse.status === 302) {
+      const location = beResponse.headers.get('location') ?? '';
+      const redirectParams = new URL(location, 'http://localhost').searchParams;
+      const isNewUser = redirectParams.get('isNewUser') === 'true';
+      const tempToken = redirectParams.get('tempToken') ?? undefined;
+      const provider = redirectParams.get('provider') ?? undefined;
+
+      const res = NextResponse.json({
+        success: true,
+        guestQuizMerged: false,
+        isNewUser,
+        tempToken,
+        provider,
+      });
+      res.cookies.set('guestId', '', { path: '/', maxAge: 0 });
+      return res;
+    }
 
     if (!beResponse.ok) {
       const errorData = (await beResponse.json().catch(() => ({}))) as { errorCode?: string };
@@ -63,12 +82,12 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    // 비-리다이렉트 JSON 응답 처리 (기존 사용자 등 fallback)
     const body = (await beResponse.json()) as NaverCallbackResponse;
     const accessToken = body?.data?.accessToken;
     const guestQuizMerged = body?.data?.guestQuizMerged ?? false;
-    const isNewUser = body?.data?.isNewUser ?? false;
 
-    const res = NextResponse.json({ success: true, guestQuizMerged, isNewUser });
+    const res = NextResponse.json({ success: true, guestQuizMerged, isNewUser: false });
 
     // LoginResponse 바디의 accessToken을 httpOnly 쿠키로 저장
     if (accessToken) {

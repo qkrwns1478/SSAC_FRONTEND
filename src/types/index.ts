@@ -196,22 +196,27 @@ export interface QuizHistoryPage {
 // api-contract/generated/api-types.ts에 없음 — BE 팀 swagger 추가 후 이전 예정
 // ============================================================
 
-// ⚠️ API type: api-types.ts에 없음 — BE 팀 확인 필요 (POST /api/v1/signup/terms)
+// POST /api/auth/terms — TermsRequest.java 기준
+export interface TermsAgreements {
+  serviceTerm: boolean;
+  privacyTerm: boolean;
+  ageVerification: boolean;
+  marketingTerm: boolean;
+}
+
 export interface TermsAgreementRequest {
-  agreeService: boolean;
-  agreePrivacy: boolean;
-  agreeAge: boolean;
-  agreeMarketing: boolean;
+  agreements: TermsAgreements;
 }
 
-// ⚠️ API type: api-types.ts에 없음 — BE 팀 확인 필요 (GET /api/v1/signup/nickname/check)
+// GET /api/auth/nickname/check — NicknameCheckResponse 기준
 export interface NicknameCheckResponse {
-  available: boolean;
+  isAvailable: boolean;
 }
 
-// ⚠️ API type: api-types.ts에 없음 — BE 팀 확인 필요 (POST /api/v1/signup/complete)
+// POST /api/auth/register — RegisterRequest 기준
 export interface SignupCompleteRequest {
   nickname: string;
+  guestId?: string;
 }
 
 // ============================================================
