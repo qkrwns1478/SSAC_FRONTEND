@@ -8,15 +8,16 @@
 
 ## 🛡️ Agent Harness Protocols
 
-| 프로토콜       | 파일 위치                             | 트리거 조건                              | 실행 방식           |
-| -------------- | ------------------------------------- | ---------------------------------------- | ------------------- |
-| SC 관심사 점검 | docs/agent-protocols/sc-harness.md    | SC가 포함된 작업 지시를 받았을 때        | 자동 (구현 전 필수) |
-| 신규 기능 개발 | docs/agent-protocols/new-feature.md   | 새로운 컴포넌트/페이지/기능 추가 요청 시 | 자동 (구현 전 필수) |
-| 테스트 작성    | docs/agent-protocols/testing.md       | 신규 컴포넌트/훅/API 연동 구현 완료 시   | 자동 (구현 후 필수) |
-| 하네스 감사    | docs/agent-protocols/harness-audit.md | 하네스 점검 요청 시 / 주기적 실행        | 수동 또는 주기적    |
-| 자가 진단      | docs/agent-protocols/self-diagnose.md | 에러 발생 / 구현 완료 후 검증 시         | 자동 (구현 후 필수) |
-| ADR 생성       | docs/agent-protocols/adr-create.md    | 기술적 의사결정이 발생했을 때            | 수동 (결정 시점)    |
-| 로그 기반 진단 | docs/agent-protocols/log-diagnose.md  | 오류 발생 즉시                           | 자동 (오류 즉시)    |
+| 프로토콜       | 파일 위치                              | 트리거 조건                              | 실행 방식                        |
+| -------------- | -------------------------------------- | ---------------------------------------- | -------------------------------- |
+| 토큰 최적화    | docs/agent-protocols/token-optimize.md | 작업 시작 전 / 스프린트 종료             | 자동 (작업 전) + 수동 (스프린트) |
+| SC 관심사 점검 | docs/agent-protocols/sc-harness.md     | SC가 포함된 작업 지시를 받았을 때        | 자동 (구현 전 필수)              |
+| 신규 기능 개발 | docs/agent-protocols/new-feature.md    | 새로운 컴포넌트/페이지/기능 추가 요청 시 | 자동 (구현 전 필수)              |
+| 테스트 작성    | docs/agent-protocols/testing.md        | 신규 컴포넌트/훅/API 연동 구현 완료 시   | 자동 (구현 후 필수)              |
+| 하네스 감사    | docs/agent-protocols/harness-audit.md  | 하네스 점검 요청 시 / 주기적 실행        | 수동 또는 주기적                 |
+| 자가 진단      | docs/agent-protocols/self-diagnose.md  | 에러 발생 / 구현 완료 후 검증 시         | 자동 (구현 후 필수)              |
+| ADR 생성       | docs/agent-protocols/adr-create.md     | 기술적 의사결정이 발생했을 때            | 수동 (결정 시점)                 |
+| 로그 기반 진단 | docs/agent-protocols/log-diagnose.md   | 오류 발생 즉시                           | 자동 (오류 즉시)                 |
 
 ---
 
@@ -60,16 +61,25 @@
 
 ---
 
-## ⚡ Protocol Execution Order
+## ⚡ 전체 Protocol Execution Order
 
-동시 트리거 발생 시 실행 순서:
+[작업 시작 전]
+0순위 token-optimize.md → 컨텍스트 최소화 (매 작업)
+1순위 sc-harness.md → SC 관심사 점검
+2순위 new-feature.md → 신규 기능 개발
 
-1순위 sc-harness.md → SC 관심사 점검 (구현 전 게이트)
-2순위 new-feature.md → 신규 기능 개발 프로토콜
-3순위 testing.md → 테스트 작성 프로토콜
-4순위 self-diagnose.md → 구현 후 자가 진단
-5순위 adr-create.md → 의사결정 기록
-6순위 harness-audit.md → 전체 하네스 감사
+[작업 완료 후]
+3순위 testing.md → 테스트 작성
+4순위 self-diagnose.md → 자가 점검
+
+[오류 발생 시]
+즉시 log-diagnose.md → 로그 기반 진단
+
+[수동 실행]
+
+-     adr-create.md      → 기술 의사결정
+-     harness-audit.md   → 전체 감사
+-     token-optimize.md  → 스프린트 종료 시 전체 최적화
 
 > 1순위 프로토콜 실행 결과가 중단(STOP)인 경우 이후 프로토콜은 실행되지 않는다.
 
@@ -124,6 +134,36 @@
 
 ---
 
+## 💰 Token Economy Rules (전역 적용)
+
+### 파일 로드 규칙
+
+□ 작업과 무관한 파일은 로드하지 않는다
+□ node_modules / .next / coverage 는 절대 로드하지 않는다
+□ 프로토콜 파일은 트리거 조건 충족 시에만 로드한다
+
+### 응답 생성 규칙
+
+□ 컴포넌트 전체 코드 대신 변경된 부분만 출력한다
+□ 이미 확인된 내용을 반복 출력하지 않는다
+□ 체크리스트는 미통과 항목만 출력한다
+□ 긴 예시 코드는 docs/examples/ 파일을 참조한다
+
+### 프로토콜 실행 규칙
+
+□ 트리거 조건을 충족하지 않는 프로토콜은 실행하지 않는다
+□ 이미 통과한 프로토콜을 동일 작업에서 재실행하지 않는다
+□ 프로토콜 실행 결과는 요약본만 출력한다
+예) "sc-harness.md 통과 — FE SC 5개 확인" (상세 내용 생략)
+
+### 자가 진단 주기
+
+□ 매 스프린트 종료 시 token-optimize.md 실행
+□ 프로토콜 파일이 200줄 초과 시 즉시 분리
+□ 미사용 파일 감사는 월 1회 수동 실행
+
+---
+
 ## 🚫 진단 없는 수정 금지 규칙
 
 오류 발생 시 아래 행동은 금지된다:
@@ -139,6 +179,7 @@
 
 | 하네스                        | 트리거 조건                       | 위치                                                 |
 | ----------------------------- | --------------------------------- | ---------------------------------------------------- |
+| 토큰 최적화                   | 작업 시작 전 / 스프린트 종료      | docs/agent-protocols/token-optimize.md               |
 | SC 관심사 점검 및 자동 재작성 | 작업 지시에 SC 항목이 포함된 경우 | [아래 참조](#1-sc-관심사-점검-및-자동-재작성-하네스) |
 | 로그 기반 진단                | 오류 발생 즉시                    | docs/agent-protocols/log-diagnose.md                 |
 
