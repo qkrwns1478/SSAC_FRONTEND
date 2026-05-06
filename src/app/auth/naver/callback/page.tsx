@@ -99,6 +99,8 @@ function NaverCallbackContent() {
         const data = (await res.json().catch(() => ({}))) as {
           guestQuizMerged?: boolean;
           isNewUser?: boolean;
+          tempToken?: string;
+          provider?: string;
         };
         // 비회원 퀴즈 기록 병합 완료 신호 확인 → sessionStorage에 저장 후 PostLoginToast가 표시
         if (data.guestQuizMerged) {
@@ -106,8 +108,10 @@ function NaverCallbackContent() {
         }
         // 클라이언트측 비회원 식별 정보 제거 (BFF 쿠키 삭제와 이중 보장)
         document.cookie = 'guestId=; Max-Age=0; path=/';
-        // 신규 사용자: 약관 동의 페이지로 이동 (뒤로가기 방지)
+        // 신규 사용자: tempToken을 저장한 뒤 약관 동의 페이지로 이동 (뒤로가기 방지)
         if (data.isNewUser) {
+          if (data.tempToken) sessionStorage.setItem('signupTempToken', data.tempToken);
+          if (data.provider) sessionStorage.setItem('signupProvider', data.provider);
           router.replace('/signup/terms');
           return;
         }

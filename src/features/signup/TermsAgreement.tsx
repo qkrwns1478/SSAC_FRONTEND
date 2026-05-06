@@ -50,14 +50,16 @@ export function TermsAgreement() {
     setIsSubmitting(true);
     try {
       await signupService.agreeTerms({
-        agreeService: agreed.service,
-        agreePrivacy: agreed.privacy,
-        agreeAge: agreed.age,
-        agreeMarketing: agreed.marketing,
+        agreements: {
+          serviceTerm: agreed.service,
+          privacyTerm: agreed.privacy,
+          ageVerification: agreed.age,
+          marketingTerm: agreed.marketing,
+        },
       });
       router.replace('/signup/nickname');
-    } catch {
-      // apiClient가 TERMS-001 toast 처리 / TERMS-002는 409 toast 후 호출자 대응
+    } catch (err) {
+      console.error('[TermsAgreement] agreeTerms 실패:', err);
     } finally {
       setIsSubmitting(false);
     }
