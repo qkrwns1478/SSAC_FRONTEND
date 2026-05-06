@@ -16,6 +16,7 @@
 | 하네스 감사    | docs/agent-protocols/harness-audit.md | 하네스 점검 요청 시 / 주기적 실행        | 수동 또는 주기적    |
 | 자가 진단      | docs/agent-protocols/self-diagnose.md | 에러 발생 / 구현 완료 후 검증 시         | 자동 (구현 후 필수) |
 | ADR 생성       | docs/agent-protocols/adr-create.md    | 기술적 의사결정이 발생했을 때            | 수동 (결정 시점)    |
+| 로그 기반 진단 | docs/agent-protocols/log-diagnose.md  | 오류 발생 즉시                           | 자동 (오류 즉시)    |
 
 ---
 
@@ -74,6 +75,15 @@
 
 ---
 
+## ⚡ 오류 발생 시 Protocol Execution Order
+
+1순위 log-diagnose.md → 로그 기반 원인 진단 (즉시, 추측 기반 수정 금지)
+2순위 self-diagnose.md → 자가 점검
+3순위 testing.md → 재발 방지 테스트 추가
+4순위 adr-create.md → 반복 오류 3회 이상 시 의사결정 기록
+
+---
+
 ## 🔍 Protocol Self-Check
 
 작업 시작 전 에이전트는 반드시 아래 질문에 답해야 한다:
@@ -114,11 +124,23 @@
 
 ---
 
+## 🚫 진단 없는 수정 금지 규칙
+
+오류 발생 시 아래 행동은 금지된다:
+
+- log-diagnose.md 실행 없이 코드 수정 시작
+- 원인 불명 상태에서 추측 기반 수정
+- 500 Server Error를 FE에서 임의로 수정 시도
+- X-Trace-Id 없이 BE 연관 오류를 FE에서 해결 시도
+
+---
+
 ## 하네스 목록 (레거시 — 하위 호환용)
 
 | 하네스                        | 트리거 조건                       | 위치                                                 |
 | ----------------------------- | --------------------------------- | ---------------------------------------------------- |
 | SC 관심사 점검 및 자동 재작성 | 작업 지시에 SC 항목이 포함된 경우 | [아래 참조](#1-sc-관심사-점검-및-자동-재작성-하네스) |
+| 로그 기반 진단                | 오류 발생 즉시                    | docs/agent-protocols/log-diagnose.md                 |
 
 ---
 
