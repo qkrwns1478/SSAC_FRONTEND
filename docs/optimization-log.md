@@ -10,7 +10,7 @@
 ### 컨텍스트 최소화
 
 - 로드 금지 파일 목록 설정 완료 : 6개 패턴
-  - src/mocks/**, docs/debug-log.md, .next/**, node_modules/**, coverage/**, src/\*_/_.test.tsx
+  - src/mocks/**, docs/debug-log.md, .next/**, node\*modules/**, coverage/**, src/\*\*/\_.test.tsx
 
 ### 미사용 파일 감사
 
