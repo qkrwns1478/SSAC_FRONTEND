@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
 import { signupService } from '@/services/signup';
 import { cn } from '@/lib/utils';
@@ -21,7 +20,6 @@ function getHelperText(checkState: CheckState, nickname: string): string {
 }
 
 export function NicknameSetup() {
-  const router = useRouter();
   const [nickname, setNickname] = useState('');
   const [checkState, setCheckState] = useState<CheckState>('idle');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -63,7 +61,8 @@ export function NicknameSetup() {
       // 회원가입 완료 — 임시 인증 토큰 제거
       sessionStorage.removeItem('signupTempToken');
       sessionStorage.removeItem('signupProvider');
-      router.replace('/');
+      // router.replace 대신 hard redirect — Header(Server Component)가 accessToken 쿠키를 fresh하게 읽도록 강제
+      window.location.replace('/');
     } catch (err) {
       console.error('[NicknameSetup] completeSignup 실패:', err);
       setCheckState('idle');
